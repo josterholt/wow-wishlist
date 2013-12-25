@@ -1,13 +1,18 @@
 package com.hatraz.bucketlist.service;
 
-import User;
-import UserRepository;
+import java.util.List;
+
+import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
+
+import com.hatraz.bucketlist.model.Item;
+import com.hatraz.bucketlist.model.User;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService, InitializingBean {
@@ -16,9 +21,11 @@ public class UserDetailServiceImpl implements UserDetailsService, InitializingBe
 
 	public UserDetails loadUserByUsername(String username)
 	{
-		/*
 		try {
-			User user = userRepo.findByUsername(username);
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+			Query q = pm.newQuery(User.class);
+			User user = (User) q.execute();
+
 			if(user == null) {
 				return new User();
 			}
@@ -27,7 +34,6 @@ public class UserDetailServiceImpl implements UserDetailsService, InitializingBe
 			System.out.println(e.toString());
 			return new User();
 		}
-		*/
 	}
 
 	public void afterPropertiesSet() throws Exception {

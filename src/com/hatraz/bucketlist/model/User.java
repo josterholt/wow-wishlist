@@ -1,14 +1,22 @@
 package com.hatraz.bucketlist.model;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.persistence.Id;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
-public class User {
+public class User implements UserDetails {
 	@Id
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
@@ -30,6 +38,7 @@ public class User {
 	
 	@Persistent
 	private String last_name;
+	private Roles[] roles;
 	
 	public String last_name() {
 		return last_name;
@@ -37,5 +46,47 @@ public class User {
 	
 	public void last_name(String val) {
 		last_name = val;
+	}
+	
+	public enum Roles implements GrantedAuthority {
+		ROLE_USER;
+
+		public String getAuthority() {
+			return name();
+		}
+	}
+
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return Arrays.<GrantedAuthority>asList();
+	}
+
+	public boolean isAccountNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean isAccountNonLocked() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean isCredentialsNonExpired() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public boolean isEnabled() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	public String getPassword() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public String getUsername() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
