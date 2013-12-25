@@ -9,5 +9,6 @@ public class WoW_Bucket_ListServlet extends HttpServlet {
 			throws IOException {
 		resp.setContentType("text/plain");
 		resp.getWriter().println("Hello, world");
+		System.out.println("GAE Test");
 	}
 }

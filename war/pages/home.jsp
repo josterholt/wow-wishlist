@@ -30,6 +30,7 @@
 	<!--  Angular Libs -->
 	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.5/angular.min.js"></script>
 	<script src="http://code.angularjs.org/1.2.5/angular-route.min.js"></script>
+	<script src="http://code.angularjs.org/1.2.5/angular-resource.min.js"></script>
 	<script src="/resources/lib/angularjs-ui/sortable.js"></script>
 	<script src="/resources/lib/angularjs-ui/autocomplete.js"></script>
 

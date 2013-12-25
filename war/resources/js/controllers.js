@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('bucketlist.controllers', []).
-  controller('AppCtrl', ['$scope', '$compile', function ($scope, $compile) {
+  controller('AppCtrl', ['$scope', '$compile', 'Item', function ($scope, $compile, Item) {
 	  $scope.criteria = null;
 	  
 	  $scope.myOption = {
@@ -12,40 +12,26 @@ angular.module('bucketlist.controllers', []).
 	            focusOpen: false,
 	            onlySelect: true,
 	            source: function (request, response) {
-	            	console.debug(request);
-	                var data = [
-	                        "Asp",
-	                        "BASIC",
-	                        "C",
-	                        "C++",
-	                        "Clojure",
-	                        "COBOL",
-	                        "ColdFusion",
-	                        "Erlang",
-	                        "Fortran",
-	                        "Groovy",
-	                        "Haskell",
-	                        "Java",
-	                        "JavaScript",
-	                        "Lisp",
-	                        "Perl",
-	                        "PHP",
-	                        "Python",
-	                        "Ruby",
-	                        "Scala",
-	                        "Scheme"
-	                ];
-	                data = $scope.myOption.methods.filter(data, request.term);
-	
-	                if (!data.length) {
-	                    data.push({
-	                        label: 'not found',
-	                        value: ''
-	                    });
-	                }
-	                // add "Add Language" button to autocomplete menu bottom
-	                response(data);
-
+	            	Item.query({ 'name': request.term }, function (data) {
+	            		data.$promise.then(function (results) {
+	            			var data = [];
+			                if (!results.length) {
+			                    data.push({
+			                        label: 'not found',
+			                        value: ''
+			                    });
+			                } else {
+			                	for(var i =0; i < results.length; i++) {
+			                		data.push({ 
+			                			label: results[i].fields[0].text,
+			                			value: results[i].id
+		                			});	                		
+			                	}
+			                }
+			                // add "Add Language" button to autocomplete menu bottom
+			                response(data);	            	
+	            		});
+	            	});
 	            }
 	        },
 	        methods: {}
