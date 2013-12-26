@@ -24,7 +24,28 @@ public class User implements UserDetails {
 	public Key getKey() {
 		return key;
 	}
+	
+	@Persistent
+	private String username;
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	public void setUsername(String val) {
+		username = val;
+	}
 
+	public String password;
+	
+	public String getPassword() {
+		return password;
+	}
+	
+	public void setPassword(String val) {
+		password = val;
+	}
+	
 	@Persistent
 	private String first_name;
 	
@@ -78,15 +99,5 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		// TODO Auto-generated method stub
 		return true;
-	}
-
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public String getUsername() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }
