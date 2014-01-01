@@ -41,25 +41,7 @@ public class HomeController {
 		return "home";
 	}
 	
-	@RequestMapping(value="/data.json", method=RequestMethod.GET)
-	public @ResponseBody Item getData() {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-		Query q = pm.newQuery(Item.class);
-		List<Item> items = (List<Item>) q.execute();
-		
-		Item item = null;
-		if(items.isEmpty()) {
-			System.out.println("No results");
-		} else {
-			item = items.get(0);
-			System.out.print(item.getName());
-		}
-		q.closeAll();
 
-		System.out.print(item);
-		return item;
-	}
-	
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/api/items", method=RequestMethod.GET)
 	public @ResponseBody Collection<ScoredDocument> searchItems(@RequestParam String name) {	
@@ -82,13 +64,25 @@ public class HomeController {
 			System.out.println(doc.getFields("name"));
 			items.add(doc);
 		}
+		
 		return items;
 	}
+	
 	
 	@RequestMapping(value="import-data", method=RequestMethod.GET)
 	public String importData() throws JsonProcessingException, IOException {
 		DataImport di = new DataImport();
 		di.run();
+		//Item item = new Item();
+		//item.setId(59612);
+		//System.out.println(di.itemExists(item));
+		return "home";
+	}
+	
+	@RequestMapping(value="index-data", method=RequestMethod.GET)
+	public String indexData() {
+		DataImport di = new DataImport();
+		di.indexData();
 		return "home";
 	}
 }

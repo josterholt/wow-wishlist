@@ -23,12 +23,14 @@ public class Item {
 	@Persistent
 	private String id;
 	
-	public String getId() {
-		return id;
+	@Persistent Integer wowId;
+	
+	public Integer getId() {
+		return wowId;
 	}
 	
-	public void setId(String val) {
-		this.id = val;
+	public void setId(Integer val) {
+		this.wowId = val;
 	}
 	
 	
