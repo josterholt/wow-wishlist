@@ -69,4 +69,31 @@ public class ItemAPIController {
 		
 		return item;
 	}
+	
+
+
+
+	@RequestMapping(value="import-task", method=RequestMethod.GET)
+	public String importTask() {
+		Queue queue = QueueFactory.getDefaultQueue();
+		queue.add(TaskOptions.Builder.withUrl("/import-data?filename=export.a.json").method(Method.GET));
+		return "complete";
+	}
+	
+	@RequestMapping(value="import-data", method=RequestMethod.GET)
+	public String importData(@RequestParam String filename) throws JsonProcessingException, IOException {
+		DataImport di = new DataImport();
+		di.run(filename);
+		//Item item = new Item();
+		//item.setId(59612);
+		//System.out.println(di.itemExists(item));
+		return "home";
+	}
+	
+	@RequestMapping(value="index-data", method=RequestMethod.GET)
+	public String indexData() {
+		DataImport di = new DataImport();
+		di.indexData();
+		return "home";
+	}
 }

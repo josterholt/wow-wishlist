@@ -8,15 +8,25 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttributes;
 
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.DatastoreService;
+import com.google.appengine.api.datastore.DatastoreServiceConfig;
+import com.google.appengine.api.datastore.DatastoreServiceFactory;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.ReadPolicy;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.search.Index;
 import com.google.appengine.api.search.IndexSpec;
 import com.google.appengine.api.search.Results;
@@ -28,8 +38,8 @@ import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
-import com.google.appengine.repackaged.org.codehaus.jackson.JsonProcessingException;
 import com.hatraz.bucketlist.model.Item;
+import com.hatraz.bucketlist.model.User;
 import com.hatraz.bucketlist.service.PMF;
 import com.hatraz.utils.DataImport;
 
@@ -42,30 +52,42 @@ public class HomeController {
 		return "home";
 	}
 	
+	@RequestMapping(value="/create-user", method=RequestMethod.GET)
+	public String setupUser(ModelMap modelMap) {
+		ReadPolicy readPolicy = new ReadPolicy(ReadPolicy.Consistency.EVENTUAL);
+		DatastoreServiceConfig datastoreConfig = DatastoreServiceConfig.Builder.withReadPolicy(readPolicy);
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService(datastoreConfig);	
 
-
-
-	@RequestMapping(value="import-task", method=RequestMethod.GET)
-	public String importTask() {
-		Queue queue = QueueFactory.getDefaultQueue();
-		queue.add(TaskOptions.Builder.withUrl("/import-data?filename=export.a.json").method(Method.GET));
+		Query q = new Query("User");
+		q.setFilter(new FilterPredicate("username", FilterOperator.EQUAL, "admin"));
+		PreparedQuery pq = datastore.prepare(q);
+		
+		FetchOptions fetchOptions = FetchOptions.Builder.withLimit(1);
+		if(pq.countEntities(fetchOptions) == 0) {
+			User user = new User();
+			user.setUsername("admin");
+			user.setPassword("admin");
+			System.out.println("Adding user");
+		} else {
+			System.out.println("User exists");
+		}
 		return "complete";
 	}
 	
-	@RequestMapping(value="import-data", method=RequestMethod.GET)
-	public String importData(@RequestParam String filename) throws JsonProcessingException, IOException {
-		DataImport di = new DataImport();
-		di.run(filename);
-		//Item item = new Item();
-		//item.setId(59612);
-		//System.out.println(di.itemExists(item));
-		return "home";
+	@RequestMapping(value="/init-user", method=RequestMethod.GET)
+	public String setUser(ModelMap modelMap) {
+		PersistenceManager pmf = PMF.get().getPersistenceManager();
+		javax.jdo.Query q = pmf.newQuery();
+		q.setFilter("username == admin");
+		User user = (User) q.execute();
+		if(user == null) {
+			System.out.println("User not found");
+		} else {
+			System.out.println("User found");
+		}
+		modelMap.addAttribute(user);
+		return "complete";
 	}
 	
-	@RequestMapping(value="index-data", method=RequestMethod.GET)
-	public String indexData() {
-		DataImport di = new DataImport();
-		di.indexData();
-		return "home";
-	}
+
 }

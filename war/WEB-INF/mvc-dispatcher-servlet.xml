@@ -29,7 +29,7 @@
 		</property>
 	</bean>
 	
-	<bean id="user" class="com.hatraz.bucketlist.model.User" scope="session" />
+	<!--  <bean id="user" class="com.hatraz.bucketlist.model.User" scope="session" />  -->
 	
 	<mvc:resources location="/resources/**" mapping="/resources/" />
 
