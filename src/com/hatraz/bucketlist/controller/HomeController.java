@@ -23,56 +23,39 @@ import com.google.appengine.api.search.Results;
 import com.google.appengine.api.search.ScoredDocument;
 import com.google.appengine.api.search.SearchService;
 import com.google.appengine.api.search.SearchServiceFactory;
+import com.google.appengine.api.taskqueue.Queue;
+import com.google.appengine.api.taskqueue.QueueFactory;
+import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 import com.google.appengine.repackaged.org.codehaus.jackson.JsonProcessingException;
 import com.hatraz.bucketlist.model.Item;
 import com.hatraz.bucketlist.service.PMF;
 import com.hatraz.utils.DataImport;
 
+
 @Controller
 public class HomeController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String getHome() {
-		Item item = new Item();
-		item.setName("Testing");
-
-		PMF.get().getPersistenceManager().makePersistent(item);
-		System.out.println("Test persistence");
 		
 		return "home";
 	}
 	
 
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/api/items", method=RequestMethod.GET)
-	public @ResponseBody Collection<ScoredDocument> searchItems(@RequestParam String name) {	
-		//PersistenceManager pm = PMF.get().getPersistenceManager();
-		//Query q = pm.newQuery(Item.class);
-		//q.setFilter(":p1.contains(name)");
-		String query_string = "name: " + name;
-		
-		SearchService searchService = SearchServiceFactory.getSearchService();
-		IndexSpec indexSpec = IndexSpec.newBuilder().setName("items").build();
-		Index index = searchService.getIndex(indexSpec);
-		Results<ScoredDocument> results = index.search(query_string);
-		
-		System.out.println(results.getResults().size());
-		
-		ArrayList<ScoredDocument> items = new ArrayList<ScoredDocument>();
-		Iterator<ScoredDocument> iterator = results.getResults().iterator();
-		while(iterator.hasNext()) {
-			ScoredDocument doc = iterator.next();
-			System.out.println(doc.getFields("name"));
-			items.add(doc);
-		}
-		
-		return items;
+
+
+	@RequestMapping(value="import-task", method=RequestMethod.GET)
+	public String importTask() {
+		Queue queue = QueueFactory.getDefaultQueue();
+		queue.add(TaskOptions.Builder.withUrl("/import-data?filename=export.a.json").method(Method.GET));
+		return "complete";
 	}
 	
-	
 	@RequestMapping(value="import-data", method=RequestMethod.GET)
-	public String importData() throws JsonProcessingException, IOException {
+	public String importData(@RequestParam String filename) throws JsonProcessingException, IOException {
 		DataImport di = new DataImport();
-		di.run();
+		di.run(filename);
 		//Item item = new Item();
 		//item.setId(59612);
 		//System.out.println(di.itemExists(item));

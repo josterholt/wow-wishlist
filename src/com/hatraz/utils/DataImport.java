@@ -18,6 +18,9 @@ import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.Filter;
+import com.google.appengine.api.datastore.Query.FilterOperator;
+import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.QueryResultIterable;
 import com.google.appengine.api.datastore.QueryResultList;
 import com.google.appengine.api.datastore.ReadPolicy;
@@ -40,56 +43,54 @@ import com.hatraz.bucketlist.model.Item;
 import com.hatraz.bucketlist.service.PMF;
 
 public class DataImport {
-	@SuppressWarnings("unchecked")
-	public void run() throws JsonProcessingException, IOException {
-		
-		ObjectMapper mapper = new ObjectMapper();
-		FileReader json_file = new FileReader("WEB-INF/data-import/export.json");
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public void run(String filename) throws JsonProcessingException, IOException {
+		if(filename == null) {
+			System.out.println("Bad input specified");
+			return;
+		}
+		FileReader json_file = new FileReader("WEB-INF/data-import/" + filename);
 		BufferedReader reader = new BufferedReader(json_file);
-
-		SearchService searchService = SearchServiceFactory.getSearchService();
-		
-		Index index = searchService.getIndex(IndexSpec.newBuilder().setName("items"));
-
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		//Transaction tx = pm.currentTransaction();
-		//tx.begin();
+		ObjectMapper mapper = new ObjectMapper();
 		
+		double deadline = 60.0;
+		
+		ReadPolicy readPolicy = new ReadPolicy(ReadPolicy.Consistency.EVENTUAL);
+		DatastoreServiceConfig datastoreConfig = DatastoreServiceConfig.Builder.withReadPolicy(readPolicy);
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService(datastoreConfig);	
+		FetchOptions fetchOptions = FetchOptions.Builder.withLimit(1);
+
 		String line;
 		int i = 0;
+
 		try {		
 			while((line = reader.readLine()) != null) {
 				Item item = mapper.readValue(line, Item.class);
-						
-				if(item != null) {
-					pm.makePersistent(item);
-			       if (i % 10000 == 0)
-			        {
-			            pm.flush();
-			            pm.evictAll();
-						//System.out.println("Managing " + pm.getManagedObjects().size() + " items");
-			        }					
-	
-			       /*
-					try {
-						Document doc = Document.newBuilder()
-								.setId(Integer.toString(item.getId()))
-								.addField(Field.newBuilder().setName("name").setText(item.getName()))
-								.build();
-						index.put(doc);
-					} catch(PutException e) {
-						System.out.println("An error occurred");
-					}
-					*/
 
-					i++;
+				
+				Query q = new Query("Item");
+				System.out.println("Search for id " + item.getId());
+				q.setFilter(new FilterPredicate("wowId", FilterOperator.EQUAL, item.getId()));
+				PreparedQuery pq = datastore.prepare(q);
+				int count = pq.countEntities(fetchOptions);
+				System.out.println("Found " + count);
+				if(count > 0) {
+					System.out.println("Skipping existing record " + item.getId());
+				} else {
+					if(item != null) {
+						pm.makePersistent(item);
+						System.out.println("Persisting item " + item.getId());
+				       if (i % 10000 == 0)
+				        {
+				            pm.flush();
+				            pm.evictAll();
+				        }					
+						i++;
+					}
 				}
 			}
-			//tx.commit();
 		} finally {
-			//if(tx.isActive()) {
-				//tx.rollback();
-			//}
 			pm.close();
 		}
 	}
@@ -116,7 +117,7 @@ public class DataImport {
 		
 		try {
 			while(current_offset < max_record) {
-				double deadline = 120.0;
+				double deadline = 60.0;
 	
 				ReadPolicy readPolicy = new ReadPolicy(ReadPolicy.Consistency.EVENTUAL);
 				DatastoreServiceConfig deadlineConfg = DatastoreServiceConfig.Builder.withDeadline(deadline);		
@@ -124,7 +125,6 @@ public class DataImport {
 				DatastoreService datastore = DatastoreServiceFactory.getDatastoreService(datastoreConfig);
 				
 				FetchOptions fetchOptions = FetchOptions.Builder.withLimit(record_limit).offset(current_offset);
-				//fetchOptions.startCursor(Cursor.fromWebSafeString(String.valueOf(current_offset)));
 				
 				Query q = new Query("Item");
 				q.addSort("name");

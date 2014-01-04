@@ -12,7 +12,9 @@ angular.module('bucketlist', [
   'bucketlist.controllers'
 ]).
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.when('/home', {templateUrl: 'resources/partials/home.html', controller: 'HomeCtrl'});
-  $routeProvider.when('/search', {templateUrl: 'resources/partials/search.html', controller: 'SearchCtrl'});
-  $routeProvider.otherwise({redirectTo: '/home'});
+  $routeProvider
+  	.when('/home', {templateUrl: 'resources/partials/home.html', controller: 'HomeCtrl'})
+  	.when('/search', {templateUrl: 'resources/partials/search.html', controller: 'SearchCtrl' })
+  	.when('/item/:id', { templateUrl: 'resources/partials/item.html', controller: 'ItemDetailCtrl' })
+  	.otherwise({redirectTo: '/home'});
 }]);

@@ -3,7 +3,7 @@
 /* Controllers */
 
 angular.module('bucketlist.controllers', []).
-  controller('AppCtrl', ['$scope', '$compile', 'Item', function ($scope, $compile, Item) {
+  controller('AppCtrl', ['$scope', '$compile', '$location', 'Item', function ($scope, $compile, $location, Item) {
 	  $scope.criteria = null;
 	  
 	  $scope.myOption = {
@@ -22,9 +22,11 @@ angular.module('bucketlist.controllers', []).
 			                    });
 			                } else {
 			                	for(var i =0; i < results.length; i++) {
+			                		console.debug(results[i]);
 			                		data.push({ 
+			                			id: results[i].id,
 			                			label: results[i].fields[0].text,
-			                			value: results[i].id
+			                			value: results[i].fields[0].text
 		                			});	                		
 			                	}
 			                }
@@ -34,7 +36,12 @@ angular.module('bucketlist.controllers', []).
 	            	});
 	            }
 	        },
-	        methods: {}
+	        methods: {},
+	        events: {
+		        select: function (event, ui) {
+		        	$location.path('/item/' + ui.item.id);
+		        }
+	        }
 	  };
 	  
 	  $scope.search = {
@@ -56,6 +63,11 @@ angular.module('bucketlist.controllers', []).
   controller('HomeCtrl', ['$scope', 'WishList', function($scope, WishList) {
 	  $scope.WishList = WishList;
   }])
-  .controller('SearchCtrl', [function() {
+  .controller('SearchCtrl', ['$routeParams', function($routeParams) {
 
+  }])
+  .controller('ItemDetailCtrl', ['$scope', '$routeParams', 'Item', function($scope, $routeParams, Item) {
+	  console.debug('Item detail');
+	  console.debug($routeParams.id);
+	  $scope.item = Item.query({ id: $routeParams.id });
   }]);
