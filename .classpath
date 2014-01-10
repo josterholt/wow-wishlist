@@ -25,5 +25,6 @@
 	<classpathentry kind="lib" path="C:/Users/Justin/Misc Code/Java/jackson-annotations-2.2.3.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Justin/Misc Code/Java/jackson-core-2.2.3.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/spring-security-core-3.1.0.RELEASE.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/twitter4j-core-3.0.5.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

@@ -2,7 +2,6 @@ package com.hatraz.bucketlist.model;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
