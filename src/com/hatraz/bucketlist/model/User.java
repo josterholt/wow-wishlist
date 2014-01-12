@@ -67,6 +67,17 @@ public class User implements UserDetails {
 		last_name = val;
 	}
 	
+	@Persistent
+	private long twitter_id;
+	
+	public long getTwitterId() {
+		return twitter_id;
+	}
+	
+	public void setTwitterId(long val) {
+		twitter_id = val;
+	}
+	
 	public enum Roles implements GrantedAuthority {
 		ROLE_USER;
 

@@ -31,9 +31,6 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
-	<bean id="UserSession" class="com.hatraz.bucketlist.model.UserSession" autowire="constructor" scope="session">
-	<aop:scoped-proxy/>
-	</bean>
 	<mvc:resources location="/resources/**" mapping="/resources/" />
 
  
