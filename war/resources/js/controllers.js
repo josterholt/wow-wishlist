@@ -5,7 +5,10 @@
 angular.module('bucketlist.controllers', []).
   controller('AppCtrl', ['$scope', '$compile', '$location', 'Item', function ($scope, $compile, $location, Item) {
 	  $scope.criteria = null;
-	  
+	  $scope.submitSearch = function () {
+		  console.debug("Search submitted");
+	  }
+
 	  $scope.myOption = {
 	        options: {
 	            html: true,
@@ -63,8 +66,8 @@ angular.module('bucketlist.controllers', []).
   controller('HomeCtrl', ['$scope', 'WishList', function($scope, WishList) {
 	  $scope.WishList = WishList;
   }])
-  .controller('SearchCtrl', ['$routeParams', function($routeParams) {
-
+  .controller('SearchCtrl', ['$routeParams', '$scope', function($routeParams, $scope) {
+	  $scope.items = Item.query({ 'name': request.term });
   }])
   .controller('ItemDetailCtrl', ['$scope', '$routeParams', 'Item', function($scope, $routeParams, Item) {
 	  console.debug('Item detail');

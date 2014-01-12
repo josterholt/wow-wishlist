@@ -7,6 +7,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.authentication.dao.ReflectionSaltSource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +29,7 @@ import twitter4j.auth.RequestToken;
 
 
 import javax.jdo.PersistenceManager;
+import javax.servlet.http.HttpServletRequest;
 
 import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.Query;
@@ -45,7 +53,9 @@ import com.google.appengine.api.taskqueue.TaskOptions.Method;
 import com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 import com.hatraz.bucketlist.model.Item;
 import com.hatraz.bucketlist.model.User;
+import com.hatraz.bucketlist.repository.UserRepo;
 import com.hatraz.bucketlist.service.PMF;
+import com.hatraz.bucketlist.service.UserDetailServiceImpl;
 import com.hatraz.utils.DataImport;
 
 
@@ -72,15 +82,49 @@ public class HomeController {
 			return "complete";
 		}		
 	}
+	
+	@RequestMapping(value="/spring_security_login", method=RequestMethod.GET)
+	public String handleFailure() {
+		return "complete";
+	}
 
 	@RequestMapping(value="/twitter_callback", method=RequestMethod.GET)
-	public String twitterCallback(ModelMap model, @RequestParam String oauth_verifier) {
+	public String twitterCallback(ModelMap model, @RequestParam String oauth_verifier, HttpServletRequest request) {
 		Twitter twitter = (Twitter) model.get("twitter");
 		RequestToken requestToken = (RequestToken) model.get("requestToken");
 		System.out.println(oauth_verifier);
 		try {
 			twitter.getOAuthAccessToken(requestToken, oauth_verifier);
+			System.out.println(twitter.getId());
 			model.remove("requestToken");
+			
+			// Check for existing user
+			User user;
+			user = UserRepo.findByUserByTwitterId(twitter.getId());
+			if(user == null) {
+				user = new User();
+				user.setTwitterId(twitter.getId());
+				UserRepo.save(user);
+			}
+			model.addAttribute("user", user);
+			try {
+		        // Must be called from request filtered by Spring Security, otherwise SecurityContextHolder is not updated
+		        UserDetailServiceImpl udService = new UserDetailServiceImpl();
+		        CustomMd5PasswordEncoder passEncoder = new CustomMd5PasswordEncoder();
+		        ReflectionSaltSource saltSource = new ReflectionSaltSource();
+		        saltSource.setUserPropertyToUse("salt");
+		        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
+		        token.setDetails(new WebAuthenticationDetails(request));
+		        DaoAuthenticationProvider authenticator = new DaoAuthenticationProvider();
+		        authenticator.setUserDetailsService(udService);
+		        authenticator.setPasswordEncoder(passEncoder);
+		        authenticator.setSaltSource(saltSource);
+		        Authentication authentication = authenticator.authenticate(token);
+		        SecurityContextHolder.getContext().setAuthentication(authentication);
+			} catch (Exception e) {
+				e.printStackTrace();
+				SecurityContextHolder.getContext().setAuthentication(null);
+			}
 		} catch(TwitterException e) {
 			System.out.println("Exception with twitter");
 			return "complete";

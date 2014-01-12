@@ -5,20 +5,24 @@
 
  	<global-method-security secured-annotations="enabled"></global-method-security>
  	
-    <http auto-config="true">
-    	<intercept-url pattern="/**" access="ROLE_USER" />
-    	<intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-    	<intercept-url pattern="/test" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-   		<form-login authentication-success-handler-ref="successHandler" />
-    	<logout logout-success-url="/logout"  />
+    <http auto-config="true" pattern="/api/**" create-session="stateless">
+    	<intercept-url pattern="/api/**" access="ROLE_USER" />
+    	<form-login  login-page="/login"/>
+    	
+    </http>
+    
+    <http>
+        	<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+        	<form-login />
     </http>
 
     <beans:bean class="com.hatraz.bucketlist.service.UserDetailServiceImpl" id="UserDetailServiceImpl" />
-    
+	
     <authentication-manager>
     	<authentication-provider user-service-ref="UserDetailServiceImpl">
     	</authentication-provider>
     </authentication-manager>
 	
 	<beans:bean id="successHandler" class="com.hatraz.bucketlist.security.SuccessHandler" />
+	<beans:bean id="failureHandler" class="com.hatraz.bucketlist.security.FailureHandler" />
 </beans:beans>
