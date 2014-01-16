@@ -22,10 +22,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import twitter4j.Twitter;
-import twitter4j.TwitterException;
-import twitter4j.TwitterFactory;
-import twitter4j.auth.RequestToken;
 
 
 import javax.jdo.PersistenceManager;
@@ -68,71 +64,6 @@ public class HomeController {
 		return "home";
 	}
 
-	@RequestMapping(value="/twitter-login", method=RequestMethod.GET)
-	public String twitterLogin(ModelMap model) {
-		Twitter twitter = new TwitterFactory().getInstance();
-		model.addAttribute("twitter", twitter);
-		try {
-			String callbackURL = "http://localhost:8080/twitter_callback";
-			RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL);
-			model.addAttribute("requestToken", requestToken);
-			System.out.println(requestToken.getAuthenticationURL());
-			return "redirect:" + requestToken.getAuthenticationURL();		
-		} catch(TwitterException e) {
-			return "complete";
-		}		
-	}
-	
-	@RequestMapping(value="/spring_security_login", method=RequestMethod.GET)
-	public String handleFailure() {
-		return "complete";
-	}
-
-	@RequestMapping(value="/twitter_callback", method=RequestMethod.GET)
-	public String twitterCallback(ModelMap model, @RequestParam String oauth_verifier, HttpServletRequest request) {
-		Twitter twitter = (Twitter) model.get("twitter");
-		RequestToken requestToken = (RequestToken) model.get("requestToken");
-		System.out.println(oauth_verifier);
-		try {
-			twitter.getOAuthAccessToken(requestToken, oauth_verifier);
-			System.out.println(twitter.getId());
-			model.remove("requestToken");
-			
-			// Check for existing user
-			User user;
-			user = UserRepo.findByUserByTwitterId(twitter.getId());
-			if(user == null) {
-				user = new User();
-				user.setTwitterId(twitter.getId());
-				UserRepo.save(user);
-			}
-			model.addAttribute("user", user);
-			try {
-		        // Must be called from request filtered by Spring Security, otherwise SecurityContextHolder is not updated
-		        UserDetailServiceImpl udService = new UserDetailServiceImpl();
-		        CustomMd5PasswordEncoder passEncoder = new CustomMd5PasswordEncoder();
-		        ReflectionSaltSource saltSource = new ReflectionSaltSource();
-		        saltSource.setUserPropertyToUse("salt");
-		        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
-		        token.setDetails(new WebAuthenticationDetails(request));
-		        DaoAuthenticationProvider authenticator = new DaoAuthenticationProvider();
-		        authenticator.setUserDetailsService(udService);
-		        authenticator.setPasswordEncoder(passEncoder);
-		        authenticator.setSaltSource(saltSource);
-		        Authentication authentication = authenticator.authenticate(token);
-		        SecurityContextHolder.getContext().setAuthentication(authentication);
-			} catch (Exception e) {
-				e.printStackTrace();
-				SecurityContextHolder.getContext().setAuthentication(null);
-			}
-		} catch(TwitterException e) {
-			System.out.println("Exception with twitter");
-			return "complete";
-		}
-		System.out.println("Done");
-		return "complete";
-	}
-	
 	@RequestMapping(value="/create-user", method=RequestMethod.GET)
 	public String setupUser(ModelMap modelMap) {
 		ReadPolicy readPolicy = new ReadPolicy(ReadPolicy.Consistency.EVENTUAL);

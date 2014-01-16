@@ -35,10 +35,9 @@ public class UserDetailServiceImpl implements UserDetailsService, InitializingBe
 			return new User();
 		}
 	}
-
+	
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
-
 }
