@@ -4,6 +4,17 @@
   <artifactId>wow-bucket-list</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <packaging>war</packaging>
+  <profiles>
+    <profile>
+      <id>GAE</id>
+      <activation>
+      <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <directory>war</directory>
+      </build>
+    </profile>
+  </profiles>
   <build>
     <sourceDirectory>src</sourceDirectory>
     <resources>
@@ -14,7 +25,7 @@
         </excludes>
       </resource>
       <resource>
-      	<directory>WEB-INF</directory>
+      	<directory>war/WEB-INF</directory>
       </resource>
     </resources>
     <plugins>
@@ -22,16 +33,41 @@
 		  <groupId>org.apache.maven.plugins</groupId>
 		  <artifactId>maven-war-plugin</artifactId>
 		  <configuration>
-		    <webXml>WEB-INF\web.xml</webXml>       
-		  </configuration>
-		</plugin>    
-		<plugin>
-		   <groupId>com.google.appengine</groupId>
-		   <artifactId>appengine-maven-plugin</artifactId>
-		   <version>1.8.8</version>
+		    <!--  <webXml>war/WEB-INF/web.xml</webXml>  -->
+            <archiveClasses>true</archiveClasses>
+            <webResources>
+                <!-- in order to interpolate version from pom into appengine-web.xml -->
+                <resource>
+                    <directory>${basedir}/war/WEB-INF</directory>
+                    <filtering>true</filtering>
+                    <targetPath>WEB-INF</targetPath>
+                </resource>
+                <resource>
+                    <directory>${basedir}/war/resources</directory>
+                    <filtering>true</filtering>
+                    <targetPath>resources</targetPath>
+                </resource>
+                <resource>
+                    <directory>${basedir}/war/pages</directory>
+                    <filtering>true</filtering>
+                    <targetPath>pages</targetPath>
+                </resource>
+                
+                
+			</webResources>
+		</configuration>
 		</plugin>
-    </plugins>
-  </build>
+           <plugin>
+                <groupId>com.google.appengine</groupId>
+                <artifactId>appengine-maven-plugin</artifactId>
+                <version>1.8.8</version>
+                <configuration>
+                   <fullScanSeconds>1</fullScanSeconds>
+                   <server>preview.appengine.google.com</server>
+                </configuration>
+            </plugin>
+	</plugins>
+</build>
   <dependencies>
     <dependency>
         <groupId>com.google.appengine</groupId>
@@ -94,6 +130,12 @@
   		<artifactId>aopalliance</artifactId>
   		<version>1.0</version>
   	</dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-core</artifactId>
+		<version>2.2.3</version>
+	</dependency>
+	              	
   	<dependency>
   		<groupId>org.codehaus.jackson</groupId>
   		<artifactId>jackson-mapper-asl</artifactId>
@@ -114,5 +156,28 @@
   		<artifactId>spring-security-config</artifactId>
   		<version>3.1.0.RELEASE</version>
   	</dependency>
+	<dependency>
+		<groupId>javax.jdo</groupId>
+		<artifactId>jdo-api</artifactId>
+		<version>3.0.1</version>
+	</dependency>
+	<dependency>
+		<groupId>com.google.appengine</groupId>
+		<artifactId>appengine-tools-sdk</artifactId>
+		<version>1.7.2.1</version>
+	</dependency>
+
+	<dependency>
+		<groupId>javax.persistence</groupId>
+		<artifactId>persistence-api</artifactId>
+		<version>1.0.2</version>
+	</dependency>
+	<dependency>
+		<groupId>com.fasterxml.jackson.core</groupId>
+		<artifactId>jackson-annotations</artifactId>
+		<version>2.2.3</version>
+	</dependency>
+	            
+            
   </dependencies>
 </project>

@@ -67,7 +67,7 @@ public class ItemAPIController {
 		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		//Entity item = datastore.get(id);
 		
-		return item;
+		return null;
 	}
 	
 
