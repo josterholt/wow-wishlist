@@ -5,23 +5,31 @@
 
  	<global-method-security secured-annotations="enabled"></global-method-security>
  	
-    <http auto-config="true" pattern="/api/**" create-session="stateless">
-    	<intercept-url pattern="/api/**" access="ROLE_USER" />
+    <http use-expressions="true" pattern="/api/**" entry-point-ref="twitterEntryPoint">
+    	<intercept-url pattern="/api/**" access="hasRole('USER')" />
     	<form-login  login-page="/login"/>
-    	
-    </http>
+    	<custom-filter position="PRE_AUTH_FILTER" ref="twitterFilter" />
+    </http>      
+    <beans:bean id="twitterEntryPoint" class="com.hatraz.bucketlist.security.TwitterAuthenticationEntryPoint" />
+    <beans:bean id="twitterFilter" class="com.hatraz.bucketlist.security.TwitterAuthenticationFilter">
+    	<beans:property name="authenticationManager" ref="authenticationManager"/>
+    </beans:bean>
     
     <http>
-        	<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
-        	<form-login />
+       	<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+       	<form-login />
     </http>
+        
+
+
 
     <beans:bean class="com.hatraz.bucketlist.service.UserDetailServiceImpl" id="UserDetailServiceImpl" />
 	
-    <authentication-manager>
-    	<authentication-provider user-service-ref="UserDetailServiceImpl">
-    	</authentication-provider>
+    <authentication-manager alias="authenticationManager">
+    	<authentication-provider ref="TwitterAccountsAuthenticationProvider"/>
     </authentication-manager>
+    
+    <beans:bean id="TwitterAccountsAuthenticationProvider" class="com.hatraz.bucketlist.security.TwitterAccountsAuthenticationProvider"></beans:bean>
 	
 	<beans:bean id="successHandler" class="com.hatraz.bucketlist.security.SuccessHandler" />
 	<beans:bean id="failureHandler" class="com.hatraz.bucketlist.security.FailureHandler" />

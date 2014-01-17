@@ -68,7 +68,7 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 	  */
 	 function ping() {
 	 	$http.get('/api/ping').success(function () {
-	 		scope.$broadcast('event:loginConfirmed');
+	 		$scope.$broadcast('event:loginConfirmed');
 	 	});
 	 }
 	 ping();	 
