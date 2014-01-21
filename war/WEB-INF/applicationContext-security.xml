@@ -5,20 +5,21 @@
 
  	<global-method-security secured-annotations="enabled"></global-method-security>
  	
-    <http use-expressions="true" pattern="/api/**" entry-point-ref="twitterEntryPoint">
+    <http use-expressions="true" entry-point-ref="twitterEntryPoint">
     	<intercept-url pattern="/api/**" access="hasRole('USER')" />
-    	<form-login  login-page="/login"/>
     	<custom-filter position="PRE_AUTH_FILTER" ref="twitterFilter" />
-    </http>      
+    </http>
+        
     <beans:bean id="twitterEntryPoint" class="com.hatraz.bucketlist.security.TwitterAuthenticationEntryPoint" />
     <beans:bean id="twitterFilter" class="com.hatraz.bucketlist.security.TwitterAuthenticationFilter">
     	<beans:property name="authenticationManager" ref="authenticationManager"/>
     </beans:bean>
     
-    <http>
+    <!-- <http>
        	<intercept-url pattern="/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
        	<form-login />
     </http>
+     -->
         
 
 

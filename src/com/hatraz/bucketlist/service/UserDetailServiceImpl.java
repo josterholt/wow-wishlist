@@ -21,11 +21,29 @@ public class UserDetailServiceImpl implements UserDetailsService, InitializingBe
 
 	public UserDetails loadUserByUsername(String username)
 	{
+		System.out.println("Load by username");
 		try {
 			PersistenceManager pm = PMF.get().getPersistenceManager();
 			Query q = pm.newQuery(User.class);
 			User user = (User) q.execute();
 
+			if(user == null) {
+				return new User();
+			}
+			return user;
+		} catch(Exception e) {
+			System.out.println(e.toString());
+			return new User();
+		}
+	}
+	
+	public static UserDetails loadUserByTwitterId(Long id) {
+		System.out.println("Load by Twitter ID");
+		try {
+			PersistenceManager pm = PMF.get().getPersistenceManager();
+			Query q = pm.newQuery(User.class);
+			q.setFilter("TwitterID == twitter_id");
+			User user = (User) q.execute(id);
 			if(user == null) {
 				return new User();
 			}

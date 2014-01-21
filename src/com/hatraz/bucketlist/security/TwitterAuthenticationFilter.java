@@ -20,8 +20,12 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.web.filter.GenericFilterBean;
 
-import com.google.appengine.api.users.User;
-import com.google.appengine.api.users.UserServiceFactory;
+import com.hatraz.bucketlist.model.User;
+import com.hatraz.bucketlist.service.UserDetailServiceImpl;
+
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.auth.RequestToken;
 
 public class TwitterAuthenticationFilter extends GenericFilterBean {
 	  private static final String REGISTRATION_URL = "/register.htm";
@@ -31,36 +35,39 @@ public class TwitterAuthenticationFilter extends GenericFilterBean {
 
 	  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		System.out.println("Running custom filter");
-	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-	    if (authentication == null) {
-	      // User isn't authenticated. Check if there is a Google Accounts user
-	      User user = UserServiceFactory.getUserService().getCurrentUser();
-
-	      if (user != null) {
-	        // User has returned after authenticating through GAE. Need to authenticate to Spring Security.
-	        PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(user, null);
-	        token.setDetails(ads.buildDetails(request));
-
-	        try {
-	          authentication = authenticationManager.authenticate(token);
-	          // Setup the security context
-	          SecurityContextHolder.getContext().setAuthentication(authentication);
-	          // Send new users to the registration page.
-	          if (authentication.getAuthorities().contains(AppRole.NEW_USER)) {
-	            ((HttpServletResponse) response).sendRedirect(REGISTRATION_URL);
-	              System.out.println("Sending user to registration URL");
-	              return;
-	          }
-	        } catch (AuthenticationException e) {
-	         // Authentication information was rejected by the authentication manager
-	          failureHandler.onAuthenticationFailure((HttpServletRequest)request, (HttpServletResponse)response, e);
-	          System.out.println("Failure");
-	          return;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		HttpServletRequest req = (HttpServletRequest) request;
+		if (authentication == null) {
+	        Twitter twitter = (Twitter) req.getSession().getAttribute("twitter");
+	        if(twitter != null) {
+		        RequestToken requestToken = (RequestToken) req.getSession().getAttribute("requestToken");
+		        String verifier = request.getParameter("oauth_verifier");
+		        
+		        try {
+		            twitter.getOAuthAccessToken(requestToken, verifier);
+		            req.getSession().removeAttribute("requestToken");			
+		            User user = (User) UserDetailServiceImpl.loadUserByTwitterId(twitter.getId());
+		            System.out.println(user);
+		            
+		            PreAuthenticatedAuthenticationToken token = new PreAuthenticatedAuthenticationToken(user, null);
+		            //token.setDetails(ads.buildDetails(request));
+		            authentication = authenticationManager.authenticate(token);
+		            SecurityContextHolder.getContext().setAuthentication(authentication);
+		            System.out.println("Auth set");
+		        } catch(AuthenticationException e) {
+		        	System.out.println("Auth failure");
+		        } catch (TwitterException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+	        } else {
+	        	((HttpServletResponse) response).sendError(401);
+		    	return;
 	        }
-	      }
-	    }
-
+		}
+    
+	    System.out.println("Continue down chain");
 	    chain.doFilter(request, response);
 	  }
 
@@ -71,4 +78,4 @@ public class TwitterAuthenticationFilter extends GenericFilterBean {
 	  public void setFailureHandler(AuthenticationFailureHandler failureHandler) {
 	    this.failureHandler = failureHandler;
 	  }
-	}
+}

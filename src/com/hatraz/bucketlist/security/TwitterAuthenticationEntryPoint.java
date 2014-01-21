@@ -18,6 +18,9 @@ public class TwitterAuthenticationEntryPoint implements AuthenticationEntryPoint
       throws IOException, ServletException {
     UserService userService = UserServiceFactory.getUserService();
 
-    response.sendRedirect(userService.createLoginURL(request.getRequestURI()));
+    System.out.println(request.getRequestURI());
+    String login_url = userService.createLoginURL(request.getRequestURI());
+    System.out.println(login_url);
+    response.sendRedirect(login_url);
   }
 }
