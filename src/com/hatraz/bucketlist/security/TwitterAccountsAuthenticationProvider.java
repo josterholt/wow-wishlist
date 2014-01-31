@@ -10,7 +10,7 @@ import com.hatraz.bucketlist.model.User;
 
 public class TwitterAccountsAuthenticationProvider implements AuthenticationProvider {
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-    	System.out.println("Running authentication");
+/*    	System.out.println("Running authentication");
     	
     	// Don't think this is casting to the right object
         Object twitterUser = authentication.getPrincipal();
@@ -30,7 +30,8 @@ public class TwitterAccountsAuthenticationProvider implements AuthenticationProv
             throw new DisabledException("Account is disabled");
         }
 
-        return new TwitterUserAuthentication(user, authentication.getDetails());
+        return new TwitterUserAuthentication(user, authentication.getDetails());*/
+    	return null;
     }
 
     public final boolean supports(Class<?> authentication) {
