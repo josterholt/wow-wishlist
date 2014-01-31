@@ -34,7 +34,7 @@ public class TwitterAuthenticationFilter extends GenericFilterBean {
 	  private AuthenticationFailureHandler failureHandler = new SimpleUrlAuthenticationFailureHandler();
 
 	  public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		System.out.println("Running custom filter");
+	/*	System.out.println("Running custom filter");
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		
 		HttpServletRequest req = (HttpServletRequest) request;
@@ -65,7 +65,7 @@ public class TwitterAuthenticationFilter extends GenericFilterBean {
 	        	((HttpServletResponse) response).sendError(401);
 		    	return;
 	        }
-		}
+		}*/
     
 	    System.out.println("Continue down chain");
 	    chain.doFilter(request, response);
