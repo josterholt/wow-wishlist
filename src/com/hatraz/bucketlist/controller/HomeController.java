@@ -64,7 +64,7 @@ public class HomeController {
 		return "home";
 	}
 
-	@RequestMapping(value="/create-user", method=RequestMethod.GET)
+/*	@RequestMapping(value="/create-user", method=RequestMethod.GET)
 	public String setupUser(ModelMap modelMap) {
 		ReadPolicy readPolicy = new ReadPolicy(ReadPolicy.Consistency.EVENTUAL);
 		DatastoreServiceConfig datastoreConfig = DatastoreServiceConfig.Builder.withReadPolicy(readPolicy);
@@ -99,7 +99,7 @@ public class HomeController {
 		}
 		modelMap.addAttribute(user);
 		return "complete";
-	}
+	}*/
 	
 
 }

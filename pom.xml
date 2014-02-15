@@ -17,6 +17,7 @@
   </profiles>
   <build>
     <sourceDirectory>src</sourceDirectory>
+    <outputDirectory>${basedir}/war/WEB-INF/classes</outputDirectory>
     <resources>
       <resource>
         <directory>src</directory>
@@ -24,16 +25,13 @@
           <exclude>**/*.java</exclude>
         </excludes>
       </resource>
-      <resource>
-      	<directory>war/WEB-INF</directory>
-      </resource>
     </resources>
     <plugins>
 		<plugin>            
 		  <groupId>org.apache.maven.plugins</groupId>
 		  <artifactId>maven-war-plugin</artifactId>
 		  <configuration>
-		    <!--  <webXml>war/WEB-INF/web.xml</webXml>  -->
+		    <webXml>${basedir}/war/WEB-INF/web.xml</webXml>
             <archiveClasses>true</archiveClasses>
             <webResources>
                 <!-- in order to interpolate version from pom into appengine-web.xml -->
@@ -52,23 +50,43 @@
                     <filtering>true</filtering>
                     <targetPath>pages</targetPath>
                 </resource>
-                
-                
 			</webResources>
 		</configuration>
 		</plugin>
-           <plugin>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-maven-plugin</artifactId>
-                <version>1.8.8</version>
-                <configuration>
-                   <fullScanSeconds>1</fullScanSeconds>
-                   <server>preview.appengine.google.com</server>
-                </configuration>
-            </plugin>
+		<plugin>
+			<groupId>com.google.appengine</groupId>
+			<artifactId>appengine-maven-plugin</artifactId>
+			<version>1.8.8</version>
+		</plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.3</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals><goal>copy</goal></goals>
+                    <configuration>
+                        <artifactItems>
+                            <artifactItem>
+                                <groupId>org.mortbay.jetty</groupId>
+                                <artifactId>jetty-runner</artifactId>
+                                <version>7.5.4.v20111024</version>
+                                <destFileName>jetty-runner.jar</destFileName>
+                            </artifactItem>
+                        </artifactItems>
+                    </configuration>
+                </execution>
+            </executions>
+		</plugin>
 	</plugins>
 </build>
-  <dependencies>
+  <dependencies>         
+   	<dependency>
+  		<groupId>aopalliance</groupId>
+  		<artifactId>aopalliance</artifactId>
+  		<version>1.0</version>
+  	</dependency>
     <dependency>
         <groupId>com.google.appengine</groupId>
         <artifactId>appengine-api-1.0-sdk</artifactId>
@@ -83,52 +101,47 @@
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-beans</artifactId>
-  		<version>3.2.5.RELEASE</version>
+  		<version>3.2.6.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-aop</artifactId>
-  		<version>3.2.5.RELEASE</version>
+  		<version>3.2.6.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-context</artifactId>
-  		<version>3.2.5.RELEASE</version>
+  		<version>3.2.6.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-core</artifactId>
-  		<version>3.2.5.RELEASE</version>
+  		<version>3.2.6.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-context-support</artifactId>
-  		<version>3.2.5.RELEASE</version>
+  		<version>3.2.6.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-expression</artifactId>
-  		<version>3.2.5.RELEASE</version>
+  		<version>3.2.6.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-web</artifactId>
-  		<version>3.2.5.RELEASE</version>
+  		<version>3.2.6.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-webmvc</artifactId>
-  		<version>3.2.5.RELEASE</version>
+  		<version>3.2.6.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>commons-logging</groupId>
   		<artifactId>commons-logging</artifactId>
   		<version>1.1.3</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>aopalliance</groupId>
-  		<artifactId>aopalliance</artifactId>
-  		<version>1.0</version>
   	</dependency>
 	<dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
@@ -144,17 +157,17 @@
   	<dependency>
   		<groupId>org.springframework.security</groupId>
   		<artifactId>spring-security-core</artifactId>
-  		<version>3.1.0.RELEASE</version>
+  		<version>3.2.0.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework.security</groupId>
   		<artifactId>spring-security-web</artifactId>
-  		<version>3.1.0.RELEASE</version>
+  		<version>3.2.0.RELEASE</version>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework.security</groupId>
   		<artifactId>spring-security-config</artifactId>
-  		<version>3.1.0.RELEASE</version>
+  		<version>3.2.0.RELEASE</version>
   	</dependency>
 	<dependency>
 		<groupId>javax.jdo</groupId>
@@ -164,7 +177,7 @@
 	<dependency>
 		<groupId>com.google.appengine</groupId>
 		<artifactId>appengine-tools-sdk</artifactId>
-		<version>1.7.2.1</version>
+		<version>1.8.8</version>
 	</dependency>
 
 	<dependency>
@@ -202,7 +215,6 @@
 		<artifactId>geronimo-jpa_2.0_spec</artifactId>
 		<version>1.0-PFD2</version>
 	</dependency>
-	            
 	<dependency>
 		<groupId>com.google.appengine.orm</groupId>
 		<artifactId>datanucleus-appengine</artifactId>
@@ -224,8 +236,24 @@
 		<artifactId>appengine-endpoints-deps</artifactId>
 		<version>1.8.8</version>
 	</dependency>
-	            
-	
+
+  <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+      <version>1.7.5</version>
+      <scope>compile</scope>
+    </dependency>
+	<dependency>
+		<groupId>javax.validation</groupId>
+		<artifactId>validation-api</artifactId>
+		<version>1.0.0.GA</version>
+	</dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+      <version>4.2.0.Final</version>
+      <scope>compile</scope>
+    </dependency>
 	            
   </dependencies>
 </project>
