@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry including="**/*.java" kind="src" output="war/classes" path="src">
+	<classpathentry including="**/*.java" kind="src" output="war/WEB-INF/classes" path="src">
 		<attributes>
 			<attribute name="optional" value="true"/>
 			<attribute name="maven.pomderived" value="true"/>
@@ -17,10 +17,5 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="/WEB-INF/lib"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="war/classes" path="war/WEB-INF">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="output" path="war/classes"/>
+	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
