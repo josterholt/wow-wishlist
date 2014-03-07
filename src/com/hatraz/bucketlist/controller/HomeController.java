@@ -27,36 +27,13 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import javax.jdo.PersistenceManager;
 import javax.servlet.http.HttpServletRequest;
 
-import com.google.appengine.api.datastore.FetchOptions;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.DatastoreService;
-import com.google.appengine.api.datastore.DatastoreServiceConfig;
-import com.google.appengine.api.datastore.DatastoreServiceFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.ReadPolicy;
-import com.google.appengine.api.datastore.Query.FilterOperator;
-import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.search.Index;
-import com.google.appengine.api.search.IndexSpec;
-import com.google.appengine.api.search.Results;
-import com.google.appengine.api.search.ScoredDocument;
-import com.google.appengine.api.search.SearchService;
-import com.google.appengine.api.search.SearchServiceFactory;
-import com.google.appengine.api.taskqueue.Queue;
-import com.google.appengine.api.taskqueue.QueueFactory;
-import com.google.appengine.api.taskqueue.TaskOptions;
-import com.google.appengine.api.taskqueue.TaskOptions.Method;
-import com.google.appengine.api.taskqueue.TaskOptions.Builder.*;
 import com.hatraz.bucketlist.model.Item;
 import com.hatraz.bucketlist.model.User;
 import com.hatraz.bucketlist.repository.UserRepo;
 import com.hatraz.bucketlist.service.PMF;
 import com.hatraz.bucketlist.service.UserDetailServiceImpl;
-import com.hatraz.utils.DataImport;
-
 
 @Controller
-//@SessionAttributes("{UserSession}")
 @SessionAttributes({"UserID", "twitter", "requestToken"})
 public class HomeController {
 	@RequestMapping(value="/", method=RequestMethod.GET)

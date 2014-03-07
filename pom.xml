@@ -17,7 +17,7 @@
   </profiles>
   <build>
     <sourceDirectory>src</sourceDirectory>
-    <outputDirectory>${basedir}/war/WEB-INF/classes</outputDirectory>
+    <outputDirectory>${basedir}/war/classes</outputDirectory>
     <resources>
       <resource>
         <directory>src</directory>
@@ -41,6 +41,11 @@
                     <targetPath>WEB-INF</targetPath>
                 </resource>
                 <resource>
+                    <directory>${basedir}/war/classes</directory>
+                    <filtering>true</filtering>
+                    <targetPath>classes</targetPath>
+                </resource>                
+                <resource>
                     <directory>${basedir}/war/resources</directory>
                     <filtering>true</filtering>
                     <targetPath>resources</targetPath>
@@ -52,11 +57,6 @@
                 </resource>
 			</webResources>
 		</configuration>
-		</plugin>
-		<plugin>
-			<groupId>com.google.appengine</groupId>
-			<artifactId>appengine-maven-plugin</artifactId>
-			<version>1.8.8</version>
 		</plugin>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -75,6 +75,12 @@
                                 <destFileName>jetty-runner.jar</destFileName>
                             </artifactItem>
                         </artifactItems>
+						<systemProperties>
+							<systemProperty>
+								<name>logback.configurationFile</name>
+								<value>${basedir}/war/logback.xml</value>
+							</systemProperty>
+						</systemProperties>
                     </configuration>
                 </execution>
             </executions>
@@ -87,11 +93,6 @@
   		<artifactId>aopalliance</artifactId>
   		<version>1.0</version>
   	</dependency>
-    <dependency>
-        <groupId>com.google.appengine</groupId>
-        <artifactId>appengine-api-1.0-sdk</artifactId>
-        <version>1.8.8</version>
-    </dependency>
     <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>servlet-api</artifactId>
@@ -175,12 +176,6 @@
 		<version>3.0.1</version>
 	</dependency>
 	<dependency>
-		<groupId>com.google.appengine</groupId>
-		<artifactId>appengine-tools-sdk</artifactId>
-		<version>1.8.8</version>
-	</dependency>
-
-	<dependency>
 		<groupId>javax.persistence</groupId>
 		<artifactId>persistence-api</artifactId>
 		<version>1.0.2</version>
@@ -216,28 +211,6 @@
 		<version>1.0-PFD2</version>
 	</dependency>
 	<dependency>
-		<groupId>com.google.appengine.orm</groupId>
-		<artifactId>datanucleus-appengine</artifactId>
-		<version>2.1.2</version>
-	</dependency>
-	<dependency>
-		<groupId>com.google.appengine</groupId>
-		<artifactId>appengine-api-labs</artifactId>
-		<version>1.8.8</version>
-	</dependency>
-	<dependency>
-		<groupId>com.google.appengine</groupId>
-		<artifactId>appengine-endpoints</artifactId>
-		<version>1.8.8</version>
-	</dependency>
-	            
-	<dependency>
-		<groupId>com.google.appengine</groupId>
-		<artifactId>appengine-endpoints-deps</artifactId>
-		<version>1.8.8</version>
-	</dependency>
-
-  <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.5</version>
@@ -254,6 +227,5 @@
       <version>4.2.0.Final</version>
       <scope>compile</scope>
     </dependency>
-	            
   </dependencies>
 </project>

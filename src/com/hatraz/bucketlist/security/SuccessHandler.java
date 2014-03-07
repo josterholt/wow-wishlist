@@ -22,11 +22,7 @@ public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 	public void onAuthenticationSuccess(HttpServletRequest request,
 			HttpServletResponse response, Authentication authentication) throws IOException,
 			ServletException {
-		HttpSession session = request.getSession();
-		session.setAttribute("user",  new User());
-		
-		super.onAuthenticationSuccess(request, response, authentication);
-
-		
+		response.setStatus(HttpServletResponse.SC_OK);
+		clearAuthenticationAttributes(request);
 	}
 }

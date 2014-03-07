@@ -10,8 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
-import com.google.appengine.repackaged.com.google.protos.gdata.proto2api.Core.Response;
-
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest arg0, HttpServletResponse arg1,
 			AccessDeniedException arg2) throws IOException, ServletException {
