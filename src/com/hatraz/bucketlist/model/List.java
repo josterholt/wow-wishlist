@@ -7,18 +7,8 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.persistence.Id;
 
-import com.google.appengine.api.datastore.Key;
-
 @PersistenceCapable
 public class List {
-	@Id
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key key;
-	
-	public Key getKey() {
-		return key;
-	}
-
 	@Persistent
 	private User user;
 	

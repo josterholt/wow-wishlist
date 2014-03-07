@@ -15,9 +15,6 @@ public class FailureHandler extends SimpleUrlAuthenticationFailureHandler {
 	public void onAuthenticationFailure(HttpServletRequest request,
 			HttpServletResponse response, AuthenticationException exception)
 			throws IOException, ServletException {
-		System.out.println("Handling failed request");
-		// TODO Auto-generated method stub
-		response.setStatus(401);
-		super.onAuthenticationFailure(request, response, exception);
+		response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Bad credentials");
 	}
 }

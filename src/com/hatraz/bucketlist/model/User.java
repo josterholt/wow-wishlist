@@ -11,18 +11,8 @@ import javax.persistence.Id;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.google.appengine.api.datastore.Key;
-
 @PersistenceCapable
 public class User implements UserDetails {
-	@Id
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key key;
-	
-	public Key getKey() {
-		return key;
-	}
-	
 	@Persistent
 	private String username;
 	

@@ -31,7 +31,8 @@
 			<value>.jsp</value>
 		</property>
 	</bean>
-	<mvc:resources location="/resources/**" mapping="/resources/" />
+	
+	<mvc:resources location="/resources/" mapping="/resources/**" />
 
  
 </beans>

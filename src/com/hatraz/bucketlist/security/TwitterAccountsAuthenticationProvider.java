@@ -31,6 +31,7 @@ public class TwitterAccountsAuthenticationProvider implements AuthenticationProv
         }
 
         return new TwitterUserAuthentication(user, authentication.getDetails());*/
+    	System.out.println("Running authentication returning null");
     	return null;
     }
 

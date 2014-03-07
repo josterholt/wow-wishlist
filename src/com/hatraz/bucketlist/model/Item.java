@@ -6,20 +6,10 @@ import javax.jdo.annotations.Persistent;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-import com.google.appengine.api.datastore.Key;
-import com.google.appengine.repackaged.org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 @PersistenceCapable
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Item {
 	@Id
-	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	private Key key;
-	
-	public Key getKey() {
-		return key;
-	}
-	
 	@Persistent
 	private String id;
 	
