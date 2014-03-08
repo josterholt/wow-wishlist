@@ -16,48 +16,8 @@
     </profile>
   </profiles>
   <build>
-    <sourceDirectory>src</sourceDirectory>
-    <outputDirectory>${basedir}/war/classes</outputDirectory>
-    <resources>
-      <resource>
-        <directory>src</directory>
-        <excludes>
-          <exclude>**/*.java</exclude>
-        </excludes>
-      </resource>
-    </resources>
-    <plugins>
-		<plugin>            
-		  <groupId>org.apache.maven.plugins</groupId>
-		  <artifactId>maven-war-plugin</artifactId>
-		  <configuration>
-		    <webXml>${basedir}/war/WEB-INF/web.xml</webXml>
-            <archiveClasses>true</archiveClasses>
-            <webResources>
-                <!-- in order to interpolate version from pom into appengine-web.xml -->
-                <resource>
-                    <directory>${basedir}/war/WEB-INF</directory>
-                    <filtering>true</filtering>
-                    <targetPath>WEB-INF</targetPath>
-                </resource>
-                <resource>
-                    <directory>${basedir}/war/classes</directory>
-                    <filtering>true</filtering>
-                    <targetPath>classes</targetPath>
-                </resource>                
-                <resource>
-                    <directory>${basedir}/war/resources</directory>
-                    <filtering>true</filtering>
-                    <targetPath>resources</targetPath>
-                </resource>
-                <resource>
-                    <directory>${basedir}/war/pages</directory>
-                    <filtering>true</filtering>
-                    <targetPath>pages</targetPath>
-                </resource>
-			</webResources>
-		</configuration>
-		</plugin>
+	<finalName>Wishlist</finalName>
+	<plugins>
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
@@ -75,16 +35,10 @@
                                 <destFileName>jetty-runner.jar</destFileName>
                             </artifactItem>
                         </artifactItems>
-						<systemProperties>
-							<systemProperty>
-								<name>logback.configurationFile</name>
-								<value>${basedir}/war/logback.xml</value>
-							</systemProperty>
-						</systemProperties>
                     </configuration>
                 </execution>
             </executions>
-		</plugin>
+        </plugin>
 	</plugins>
 </build>
   <dependencies>         

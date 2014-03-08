@@ -1,0 +1,51 @@
+#header {
+	position: relative;
+	background: #666666;
+	color: #fff;
+	text-align: center;
+	padding: 5px;
+	margin-bottom: 10px;
+}
+
+#main-navigation {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px;
+    margin-right: 5px;	
+}
+
+#search-bar {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	padding: 5px;
+	text-align: center;
+}
+
+#main-col li {
+	padding: 5px;
+	cursor: move;
+}
+
+#main-col li:nth-child(even) {
+	background: #fff;
+}
+
+#main-col li:nth-child(odd) {
+	background: #e6e6e6;
+}
+
+#left-col {
+	background: #e6e6e6;
+	border: 1px solid #ccc;
+	padding: 10px;
+}
+
+#keyword-search  {
+	text-align: right;
+}
+
+#keyword-search [name=keywords] {
+	width: 210px;
+}
