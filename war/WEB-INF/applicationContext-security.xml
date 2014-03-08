@@ -3,15 +3,17 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/security	http://www.springframework.org/schema/security/spring-security-3.2.xsd">
 
- 	<global-method-security secured-annotations="enabled"></global-method-security>
-
-     <http use-expressions="false" entry-point-ref="twitterEntryPoint">
+ 	<!-- <global-method-security secured-annotations="enabled"></global-method-security> -->
+ 	
+	<http pattern="/**" security="none"></http>
+	
+<!--      <http use-expressions="false" entry-point-ref="twitterEntryPoint">
     	 <intercept-url pattern="/api/**" access="hasRole('USER')" /> 
     	<custom-filter position="PRE_AUTH_FILTER" ref="twitterFilter" />
     	<custom-filter position="FORM_LOGIN_FILTER" ref="loginFilter" />
     </http>
-
-    <beans:bean id="twitterEntryPoint" class="com.hatraz.bucketlist.security.TwitterAuthenticationEntryPoint" />
+ -->
+<!--     <beans:bean id="twitterEntryPoint" class="com.hatraz.bucketlist.security.TwitterAuthenticationEntryPoint" /> -->
 <!--     <beans:bean id="twitterFilter" class="com.hatraz.bucketlist.security.TwitterAuthenticationFilter">
     	<beans:property name="authenticationManager" ref="authenticationManager"/>
     </beans:bean> -->

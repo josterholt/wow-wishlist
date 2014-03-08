@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 import com.hatraz.bucketlist.model.User;
 
 
-
 @SessionAttributes({"User"})
 public class SuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 	@Override

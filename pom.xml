@@ -16,8 +16,6 @@
     </profile>
   </profiles>
   <build>
-    <sourceDirectory>src</sourceDirectory>
-    <outputDirectory>${basedir}/war/classes</outputDirectory>
     <resources>
       <resource>
         <directory>src</directory>
@@ -43,7 +41,7 @@
                 <resource>
                     <directory>${basedir}/war/classes</directory>
                     <filtering>true</filtering>
-                    <targetPath>classes</targetPath>
+                    <targetPath>WEB-INF/classes</targetPath>
                 </resource>                
                 <resource>
                     <directory>${basedir}/war/resources</directory>

@@ -12,7 +12,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 public class TwitterAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-  @Override
   public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
 	  response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
   }

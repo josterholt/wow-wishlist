@@ -33,11 +33,20 @@ import com.hatraz.bucketlist.repository.UserRepo;
 import com.hatraz.bucketlist.service.PMF;
 import com.hatraz.bucketlist.service.UserDetailServiceImpl;
 
+
 @Controller
 @SessionAttributes({"UserID", "twitter", "requestToken"})
 public class HomeController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String getHome(ModelMap model) {
+		System.out.println("Testing existing class");
+		System.out.println(System.getProperty("java.class.path"));
+		try {
+			System.out.println(Class.forName("com.hatraz.bucketlist.security.TwitterAuthenticationEntryPoint", false, null));
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return "home";
 	}
 
