@@ -38,6 +38,9 @@ import com.hatraz.bucketlist.service.UserDetailServiceImpl;
 public class HomeController {
 	@RequestMapping(value="/", method=RequestMethod.GET)
 	public String getHome(ModelMap model) {
+		System.out.println("################### Testing ############################");
+		Item item = new Item();
+		System.out.print(item);
 		return "home";
 	}
 

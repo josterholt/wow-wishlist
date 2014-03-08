@@ -70,7 +70,7 @@ public class TwitterAuthenticationFilter extends GenericFilterBean {
 	    System.out.println("Continue down chain");
 	    chain.doFilter(request, response);
 	  }
-
+	  
 	  public void setAuthenticationManager(AuthenticationManager authenticationManager) {
 	    this.authenticationManager = authenticationManager;
 	  }
