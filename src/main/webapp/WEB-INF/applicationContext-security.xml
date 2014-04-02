@@ -22,14 +22,6 @@
     	<authentication-provider ref="TwitterAccountsAuthenticationProvider"/>
     </authentication-manager>    
  
-	<authentication-manager alias="authenticationManager">
-        <authentication-provider>
-            <user-service>
-                <user name="user" password="password" authorities="ROLE_USER"/>
-            </user-service>
-        </authentication-provider>
-    </authentication-manager>    
-
     <beans:bean id="TwitterAccountsAuthenticationProvider" class="com.hatraz.bucketlist.security.TwitterAccountsAuthenticationProvider"></beans:bean>
 	
 	<beans:bean id="successHandler" class="com.hatraz.bucketlist.security.SuccessHandler" />

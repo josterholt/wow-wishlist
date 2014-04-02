@@ -5,7 +5,9 @@
         <wb-resource deploy-path="/" source-path="/war/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/test/java"/>
         <property name="java-output-path" value="/WoW Bucket List/target/classes"/>
-        <property name="context-root" value="wow-bucket-list"/>
+        <property name="context-root" value="Wishlist"/>
     </wb-module>
 </project-modules>
