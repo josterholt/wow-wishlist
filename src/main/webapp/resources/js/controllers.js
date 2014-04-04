@@ -17,6 +17,7 @@ angular.module('bucketlist.controllers', []).
 	            source: function (request, response) {
 	            	Item.query({ 'name': request.term }, function (data) {
 	            		data.$promise.then(function (results) {
+	            			console.debug(results);
 	            			var data = [];
 			                if (!results.length) {
 			                    data.push({
@@ -28,8 +29,8 @@ angular.module('bucketlist.controllers', []).
 			                		console.debug(results[i]);
 			                		data.push({ 
 			                			id: results[i].id,
-			                			label: results[i].fields[0].text,
-			                			value: results[i].fields[0].text
+			                			label: results[i].name,
+			                			value: results[i].name
 		                			});	                		
 			                	}
 			                }
