@@ -1,15 +1,23 @@
 package com.hatraz.bucketlist.model;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -87,6 +95,32 @@ public class User implements UserDetails {
 	
 	public void setTwitterId(long val) {
 		twitter_id = val;
+	}
+	
+	@ManyToMany(targetEntity=com.hatraz.bucketlist.model.Item.class, 
+			cascade={CascadeType.PERSIST, CascadeType.MERGE}
+	)
+	@JoinTable(
+		name="user_item_favorites",
+		joinColumns={@JoinColumn(name="user_id")},
+		inverseJoinColumns={@JoinColumn(name="item_id")}
+	)
+	private Collection<Item> favorite_items;
+	
+	public Collection<Item> getFavoriteItems() {
+		return this.favorite_items;
+	}
+	
+	public void setFavoriteItems(Collection<Item> items) {
+		this.favorite_items = items;
+	}
+	
+	public void addFavoriteItem(Item favorite_item) {
+		this.favorite_items.add(favorite_item);
+	}
+	
+	public void removeFavoriteItem(Item favorite_item) {
+		this.favorite_items.remove(favorite_item);
 	}
 	
 	public enum Roles implements GrantedAuthority {

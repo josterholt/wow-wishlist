@@ -72,6 +72,7 @@ public class TwitterAuthenticationFilter extends GenericFilterBean {
 		            authentication = authenticationManager.authenticate(token);
 		            SecurityContextHolder.getContext().setAuthentication(authentication);
 		            System.out.println("Auth set");
+	            	req.getSession().setAttribute("user_id", user.getId());
 		            ((HttpServletResponse) response).sendRedirect("/");
 		            return;
 		        } catch(AuthenticationException e) {
