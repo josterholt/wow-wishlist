@@ -41,7 +41,11 @@ public class UserServiceImpl implements UserService {
 		if(user == null) {
 			throw new Exception("User not found");
 		}
+
 		updatedUser.setFirstName(user.getFirstName());
+		updatedUser.setFavoriteItems(user.getFavoriteItems());
+		this.userRepo.save(updatedUser);
+		//updatedUser = userRepo.save(user);		
 		return updatedUser;
 	}
 

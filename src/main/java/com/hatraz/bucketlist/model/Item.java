@@ -12,17 +12,25 @@ import javax.persistence.Table;
 public class Item {
 	@Id
 	@Column
-	private String id;
+	private Integer id;
+	
+	public Integer getId() {
+		return this.id;
+	}
+	
+	public void setId(Integer val) {
+		this.id = val;
+	}
 	
 	@Column
 	Integer wowId;
 	
-	public Integer getId() {
-		return wowId;
+	public Integer getWoWId() {
+		return this.wowId;
 	}
 	
-	public void setId(Integer val) {
-		this.wowId = val;
+	public void setWoWId(Integer wowId) {
+		this.wowId = wowId;
 	}
 	
 	@Column

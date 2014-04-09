@@ -1,6 +1,9 @@
 package com.hatraz.bucketlist.controller;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +22,9 @@ import twitter4j.TwitterException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hatraz.bucketlist.model.Item;
 import com.hatraz.bucketlist.model.User;
+import com.hatraz.bucketlist.service.ItemServiceImpl;
 import com.hatraz.bucketlist.service.UserServiceImpl;
 
 @Controller
@@ -27,9 +32,39 @@ import com.hatraz.bucketlist.service.UserServiceImpl;
 public class HomeController {
 	private @Autowired HttpServletRequest request;
 	private @Autowired UserServiceImpl userServiceImpl;
+	private @Autowired ItemServiceImpl itemServiceImpl;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String getHome(ModelMap model) {
+	public String getHome(ModelMap model) {	
+		return "home";
+	}
+	
+	@RequestMapping(value="/get-favorites", method=RequestMethod.GET)
+	public String getItems() {
+		User user = userServiceImpl.findById((Integer) request.getSession().getAttribute("user_id"));
+		System.out.print(user);
+		Collection<Item> items = user.getFavoriteItems();
+
+		System.out.print(items.size());
+		for(Iterator<Item> i = items.iterator(); i.hasNext();) {
+			Item item = i.next();
+			System.out.println(item.getName());
+		}
+		return "home";
+	}
+	
+	@RequestMapping(value="/set-favorites", method=RequestMethod.GET)
+	public String setItem() throws Exception {
+		User user = userServiceImpl.findById((Integer) request.getSession().getAttribute("user_id"));
+
+		Item item = itemServiceImpl.findById(1);
+
+		HashSet<Item> item_set = new HashSet<Item>();
+		item_set.add(item);
+		
+		user.setFavoriteItems(item_set);
+		user.setFirstName("Bob");
+		userServiceImpl.update(user);
 		return "home";
 	}
 	
