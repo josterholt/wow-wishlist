@@ -2,9 +2,7 @@ package todo_model;
 
 import java.util.ArrayList;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -12,9 +10,11 @@ import com.hatraz.bucketlist.model.Item;
 import com.hatraz.bucketlist.model.User;
 
 
-@Entity
 public class List {
-	@Persistent
+	@Id
+	@Column
+	private int id;
+	
 	private User user;
 	
 	public User getUser() {
@@ -25,7 +25,6 @@ public class List {
 		user = val;
 	}
 	
-	@Persistent	
 	private String character;
 	
 	public String getCharacter() {
@@ -36,7 +35,6 @@ public class List {
 		character = val;
 	}
 
-	@Persistent
 	private ArrayList<Item> items;
 	
 	public ArrayList<Item> getItems() {

@@ -1,13 +1,27 @@
 package todo_model;
 
-import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-@PersistenceCapable
+@Entity
+@Table(name="characters")
 public class Character {
-	@Persistent
+
+	@Column
+	@Id
+	private int id;
+
+	public Integer getID() {
+		return id;
+	}
+	
+	public void setID(Integer val) {
+		id = val;
+	}
+
+	@Column
 	private String name;
 	
 	public String getName() {
@@ -16,16 +30,5 @@ public class Character {
 	
 	public void setName(String val) {
 		name = val;
-	}
-
-	@Persistent
-	private Integer character_id;
-	
-	public Integer getCharacterID() {
-		return character_id;
-	}
-	
-	public void setCharacterID(Integer val) {
-		character_id = val;
 	}
 }

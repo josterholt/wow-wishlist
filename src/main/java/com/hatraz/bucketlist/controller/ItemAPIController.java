@@ -14,16 +14,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
-
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
 
 import com.hatraz.bucketlist.model.Item;
 import com.hatraz.bucketlist.service.ItemService;
-import com.hatraz.bucketlist.service.PMF;
 //import com.hatraz.utils.DataImport;
 
 @Controller
