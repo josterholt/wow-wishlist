@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Resource;
-import javax.jdo.PersistenceManager;
-import javax.jdo.Query;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +28,10 @@ public class UserDetailServiceImpl implements UserDetailsService, InitializingBe
 	{
 		System.out.println("Load by username");
 		try {
-			PersistenceManager pm = PMF.get().getPersistenceManager();
-			Query q = pm.newQuery(User.class);
-			User user = (User) q.execute();
-
-			if(user == null) {
-				return new User();
-			}
-			return user;
+			/**
+			 * Not implemented
+			 */
+			return new User();
 		} catch(Exception e) {
 			System.out.println(e.toString());
 			return new User();
