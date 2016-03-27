@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.eclipse.org/configure.dtd">
+<Configure id="Server" class="org.eclipse.jetty.webapp.WebAppContext">
+	<New id="ds" class="org.eclipse.jetty.plus.jndi.EnvEntry">
+		<Arg>mysql-dataSource</Arg>
+		<Arg>
+			<New class="com.mysql.jdbc.jdbc2.optional.MysqlConnectionPoolDataSource">
+				<Set name="url">jdbc:mysql://ubuntu:3306/wishlist</Set>
+				<Set name="User">dbuser</Set>
+				<Set name="Password">dbuser</Set>
+			</New>
+		</Arg>
+	</New>
+</Configure>

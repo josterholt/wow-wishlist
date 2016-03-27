@@ -22,6 +22,20 @@
 	 		<groupId>org.mortbay.jetty</groupId>
 	 		<artifactId>jetty-maven-plugin</artifactId>
 	 		<version>8.1.14.v20131031</version>
+	 		<dependencies>
+				<dependency>
+					<groupId>mysql</groupId>
+					<artifactId>mysql-connector-java</artifactId>
+					<version>5.1.29</version>
+				</dependency> 	 		
+	 		</dependencies>	 		
+	 		<configuration>
+	 		<useProvidedScope>False</useProvidedScope>
+	 			<webApp>
+		 			<jettyEnvXml>${basedir}/jetty-env.xml</jettyEnvXml>	 			
+	 			</webApp>
+	 		
+	 		</configuration>
 		</plugin>	
         <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -77,6 +91,12 @@
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-core</artifactId>
   		<version>3.2.6.RELEASE</version>
+  		<exclusions>
+  			<exclusion>
+  				<artifactId>commons-logging</artifactId>
+  				<groupId>commons-logging</groupId>
+  			</exclusion>
+  		</exclusions>
   	</dependency>
   	<dependency>
   		<groupId>org.springframework</groupId>
@@ -97,11 +117,6 @@
   		<groupId>org.springframework</groupId>
   		<artifactId>spring-webmvc</artifactId>
   		<version>3.2.6.RELEASE</version>
-  	</dependency>
-  	<dependency>
-  		<groupId>commons-logging</groupId>
-  		<artifactId>commons-logging</artifactId>
-  		<version>1.1.3</version>
   	</dependency>
 	<dependency>
 		<groupId>com.fasterxml.jackson.core</groupId>
@@ -139,12 +154,28 @@
 		<artifactId>twitter4j-core</artifactId>
 		<version>4.0.1</version>
 	</dependency>
+	
+	<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>jcl-over-slf4j</artifactId>
+		<version>1.7.0</version>
+		<scope>runtime</scope>
+	</dependency>
+	
 	<dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>1.7.5</version>
       <scope>compile</scope>
     </dependency>
+    
+	<dependency>
+		<groupId>org.slf4j</groupId>
+  		<artifactId>slf4j-log4j12</artifactId>
+		<version>1.7.0</version>
+		<scope>runtime</scope>
+	</dependency>
+
 	<dependency>
 		<groupId>javax.validation</groupId>
 		<artifactId>validation-api</artifactId>

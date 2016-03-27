@@ -15,6 +15,14 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 		<url-pattern>/</url-pattern>
 	</servlet-mapping>
 	
+	<resource-ref>
+	    <description>DB Connection</description>
+	    <res-ref-name>mysql-dataSource</res-ref-name>
+	    <res-type>javax.sql.DataSource</res-type>
+	    <res-auth>Container</res-auth>
+	</resource-ref>
+	
+	
  	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>
@@ -22,6 +30,7 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 			/WEB-INF/mvc-dispatcher-servlet.xml
 		</param-value>
 	</context-param>
+	
  	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>

@@ -18,7 +18,8 @@
 					<h1>WoW Wish List</h1>	
 				</div>
 			</div>
-			<div id="main-navigation"><a href="#">Login/Register</a></div>
+			<div id="main-navigation"><a href="javascript:void(0);" ng-click="openMessageBox()" ng-show="isLoggedIn">Login/Register</a></div>
+			<div id="main-navigation"><a href="javascript:void(0);" ng-click="logout()" ng-hide="isLoggedIn">Logout</a></div>
 			<div id="search-bar" ng-include="'/resources/partials/components/search_bar.html'"></div>
 		</section>
 		

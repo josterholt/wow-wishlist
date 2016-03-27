@@ -49,10 +49,17 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 }])
 .run(['$rootScope', '$http', '$location', function($scope, $http, $location) {
 	$scope.requests401 = [];
+	$scope.isLoggedIn = false;
 	
 	// Login modal added to root scope
 	$scope.openMessageBox = function () {
 		$("#login-modal").modal({ show: true });
+	}
+	
+	$scope.logout = function () {
+		$http.get('/api/logout').success(function () {
+			$scope.isLoggedIn = false;
+		});
 	}
 
 	/**
@@ -69,6 +76,8 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 	 function ping() {
 	 	$http.get('/api/ping').success(function () {
 	 		$scope.$broadcast('event:loginConfirmed');
+	 		console.debug('is logged in')
+	 		$scope.isLoggedIn = true;
 	 	});
 	 }
 	 ping();	 
