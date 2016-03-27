@@ -45,6 +45,13 @@ public class LoginController {
 		return;
 	}
 	
+	@RequestMapping(value="/logout", method=RequestMethod.GET)
+	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		//Twitter twitter = new TwitterFactory().getInstance();
+		//twitter.invalidateOAuth2Token();
+		request.getSession().invalidate();
+	}
+	
 /*	@RequestMapping(value="/twitter-callback", method=RequestMethod.GET)
 	public void twitterCallback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		System.out.println("Twitter callback");

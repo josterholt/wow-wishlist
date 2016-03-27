@@ -1,5 +1,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
 	xmlns:mvc="http://www.springframework.org/schema/mvc" 
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:jpa="http://www.springframework.org/schema/data/jpa"
@@ -11,6 +12,8 @@
         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
         http://www.springframework.org/schema/context 
         http://www.springframework.org/schema/context/spring-context-3.0.xsd
+        http://www.springframework.org/schema/jee
+        http://www.springframework.org/schema/jee/spring-jee-3.2.xsd
         http://www.springframework.org/schema/mvc
         http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
         http://www.springframework.org/schema/aop
@@ -25,8 +28,10 @@
 	<context:component-scan base-package="com.hatraz.bucketlist.controller"></context:component-scan>
 	<context:component-scan base-package="com.hatraz.bucketlist.service"></context:component-scan>
 	
-	<context:property-placeholder location="persistence-mysql.properties" />	
- 
+	<!--  <context:property-placeholder location="persistence-mysql.properties" /> -->
+		
+    <jee:jndi-lookup id="dataSource" jndi-name="mysql-dataSource" />
+    
 	<mvc:annotation-driven />
 	
 	<bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
@@ -46,13 +51,6 @@
 		</property>
 	</bean>
 
-	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
-		<property name="driverClassName" value="${jdbc.driverClassName}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.user}" />
-		<property name="password" value="${jdbc.pass}" />
-	</bean>
-	
 	<jpa:repositories base-package="com.hatraz.bucketlist.repository"></jpa:repositories>
 	
 	<tx:annotation-driven transaction-manager="transactionManager" />

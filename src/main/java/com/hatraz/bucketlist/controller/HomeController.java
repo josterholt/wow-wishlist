@@ -35,7 +35,7 @@ public class HomeController {
 	private @Autowired ItemServiceImpl itemServiceImpl;
 	
 	@RequestMapping(value="/", method=RequestMethod.GET)
-	public String getHome(ModelMap model) {	
+	public String getHome(ModelMap model) {
 		return "home";
 	}
 	
