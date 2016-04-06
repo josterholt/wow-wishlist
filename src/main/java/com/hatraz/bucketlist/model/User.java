@@ -11,7 +11,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
-
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -110,7 +109,7 @@ public class User implements UserDetails {
 	public void setFavoriteItems(Collection<Item> items) {
 		this.favorite_items = items;
 	}
-	
+
 	public void addFavoriteItem(Item favorite_item) {
 		this.favorite_items.add(favorite_item);
 	}
