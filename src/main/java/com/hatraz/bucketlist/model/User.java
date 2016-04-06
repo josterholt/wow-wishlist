@@ -6,6 +6,7 @@ import java.util.Collection;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -90,8 +91,10 @@ public class User implements UserDetails {
 		twitter_id = val;
 	}
 	
-	@ManyToMany(targetEntity=com.hatraz.bucketlist.model.Item.class, 
-			cascade={CascadeType.PERSIST, CascadeType.MERGE}
+	@ManyToMany(
+		fetch=FetchType.EAGER,
+		targetEntity=com.hatraz.bucketlist.model.Item.class, 
+		cascade={CascadeType.PERSIST, CascadeType.MERGE}
 	)
 	@JoinTable(
 		name="user_item_favorites",

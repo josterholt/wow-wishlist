@@ -32,7 +32,7 @@ public class LoginController {
 
             
             int index = callbackURL.lastIndexOf("/");
-            callbackURL.replace(index, callbackURL.length(), "").append("/api/twitter-callback");
+            callbackURL.replace(index, callbackURL.length(), "").append("/auth/twitter-callback");
             
             System.out.println(callbackURL);
             RequestToken requestToken = twitter.getOAuthRequestToken(callbackURL.toString());
@@ -42,15 +42,16 @@ public class LoginController {
         } catch (TwitterException e) {
             throw new ServletException(e);
         }
-		return;
+        return;
 	}
-	
+	/*
 	@RequestMapping(value="/logout", method=RequestMethod.GET)
-	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		//Twitter twitter = new TwitterFactory().getInstance();
-		//twitter.invalidateOAuth2Token();
+	public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, TwitterException {
+		Twitter twitter = new TwitterFactory().getInstance();
+		twitter.invalidateOAuth2Token();
 		request.getSession().invalidate();
 	}
+	*/
 	
 /*	@RequestMapping(value="/twitter-callback", method=RequestMethod.GET)
 	public void twitterCallback(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

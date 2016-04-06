@@ -2,6 +2,8 @@ package com.hatraz.bucketlist.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Pageable;
+
 import com.hatraz.bucketlist.model.Item;
 
 
@@ -11,5 +13,5 @@ public interface ItemService {
 	public List<Item> findAll();
 	public Item update(Item item) throws Exception;
 	public Item findById(int id);
-	public List<Item> searchByName(String name);
+	public List<Item> searchByName(String name, Pageable pageable);
 }

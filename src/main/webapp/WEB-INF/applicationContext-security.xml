@@ -6,7 +6,8 @@
 	<global-method-security secured-annotations="enabled"></global-method-security>
 
 	<http use-expressions="false" entry-point-ref="twitterEntryPoint">
-    	 <intercept-url pattern="/api/**" access="ROLE_USER" /> 
+    	<intercept-url pattern="/auth/**" access="ROLE_USER" />
+    	<logout logout-url="/logout" logout-success-url="/" />
     	<custom-filter position="PRE_AUTH_FILTER" ref="twitterFilter" />
     </http>
 
