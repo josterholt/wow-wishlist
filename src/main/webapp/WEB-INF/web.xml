@@ -44,6 +44,6 @@ http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
     </filter>
     <filter-mapping>
     	<filter-name>springSecurityFilterChain</filter-name>
-		<url-pattern>/api/*</url-pattern>
-	</filter-mapping>	
+		<url-pattern>/auth/*</url-pattern>
+	</filter-mapping>
 </web-app>

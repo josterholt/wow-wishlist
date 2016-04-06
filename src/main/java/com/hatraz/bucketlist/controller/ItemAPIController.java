@@ -8,7 +8,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,26 +21,30 @@ import javax.persistence.Entity;
 import javax.persistence.EntityNotFoundException;
 
 import com.hatraz.bucketlist.model.Item;
+import com.hatraz.bucketlist.repository.ItemRepo;
 import com.hatraz.bucketlist.service.ItemService;
 //import com.hatraz.utils.DataImport;
 
 @Controller
 public class ItemAPIController {
-	@Autowired ItemService itemService;
+	//@Autowired ItemService itemService;
+	@Autowired ItemRepo itemService;
 
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/api/items", method=RequestMethod.GET)
-	public @ResponseBody List<Item> searchItems(@RequestParam String name) {	
-		List<Item> items = itemService.searchByName(name);
+	public @ResponseBody List<Item> searchItems(@RequestParam String name) {
+		System.out.println("searchItems");
+		Pageable topTen = new PageRequest(0, 10);
+		List<Item> items = itemService.searchByName("%" + name + "%", topTen);
 		return items;
 	}
 	
 	@RequestMapping(value="/api/items/{id}", method=RequestMethod.GET)
-	public Entity getItem(@RequestParam String id) throws EntityNotFoundException {
+	public @ResponseBody Item getItem(@PathVariable(value="id") String id) throws EntityNotFoundException {
+		System.out.println("getItem");
 		//DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 		//Entity item = datastore.get(id);
-		
-		return null;
+		return itemService.findOne(Integer.parseInt(id));
 	}
 	
 

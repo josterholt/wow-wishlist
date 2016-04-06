@@ -57,7 +57,8 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 	}
 	
 	$scope.logout = function () {
-		$http.get('/api/logout').success(function () {
+		$http.get('/auth/logout').success(function () {
+			console.debug("Logged out");
 			$scope.isLoggedIn = false;
 		});
 	}
@@ -74,10 +75,13 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 	  * Checks to see if user is logged in
 	  */
 	 function ping() {
-	 	$http.get('/api/ping').success(function () {
+	 	$http.get('/auth/ping').success(function () {
 	 		$scope.$broadcast('event:loginConfirmed');
 	 		console.debug('is logged in')
 	 		$scope.isLoggedIn = true;
+	 	})
+	 	.error(function () {
+	 		console.debug("foo");
 	 	});
 	 }
 	 ping();	 

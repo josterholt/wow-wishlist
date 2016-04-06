@@ -3,6 +3,7 @@ package com.hatraz.bucketlist.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.hatraz.bucketlist.model.Item;
@@ -52,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
 	}
 
 	@Override
-	public List<Item> searchByName(String name) {
-		return itemRepo.searchByName("%" + name + "%");
+	public List<Item> searchByName(String name, Pageable pageable) {
+		return itemRepo.searchByName("%" + name + "%", pageable);
 	}
 }
