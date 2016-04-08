@@ -14,6 +14,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.hibernate.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -91,7 +92,6 @@ public class User implements UserDetails {
 	}
 	
 	@ManyToMany(
-		fetch=FetchType.EAGER,
 		targetEntity=com.hatraz.bucketlist.model.Item.class, 
 		cascade={CascadeType.PERSIST, CascadeType.MERGE}
 	)
