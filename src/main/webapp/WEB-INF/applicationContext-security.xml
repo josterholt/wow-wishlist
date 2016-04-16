@@ -8,7 +8,7 @@
 	<http auto-config='true' use-expressions="false" entry-point-ref="twitterEntryPoint">
     	<intercept-url pattern="/auth/**" access="ROLE_USER" />
     	<logout logout-url="/logout" logout-success-url="/" />
-    	<!--  <custom-filter position="PRE_AUTH_FILTER" ref="twitterFilter" />  -->
+    	<custom-filter position="PRE_AUTH_FILTER" ref="twitterFilter" />
     </http>
         
     <beans:bean id="twitterEntryPoint" class="com.hatraz.bucketlist.security.TwitterAuthenticationEntryPoint" />
@@ -21,7 +21,7 @@
 	
 	<authentication-manager alias="authenticationManager">
 		<authentication-provider ref="InternalAuthenticationProvider" />
-    	<!--  <authentication-provider ref="TwitterAccountsAuthenticationProvider"/>  -->
+    	<authentication-provider ref="TwitterAccountsAuthenticationProvider"/>
     </authentication-manager>    
  
     <beans:bean id="InternalAuthenticationProvider" class="com.hatraz.bucketlist.security.InternalAuthenticationProvider"></beans:bean>
