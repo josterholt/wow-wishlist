@@ -10,12 +10,13 @@
 <link rel="stylesheet" href="/resources/css/app.css" />
 </head>
 <body ng-controller="AppCtrl">
-	<div ng-include="'/resources/partials/components/modals/login.html'"></div>
+	<!--  <div ng-include="'/resources/partials/components/modals/login.html'"></div>  -->
+	<div loginform></div>
 	<div class="container">
 		<section id="header" class="col-md-12">	
 			<div class="row">
 				<div class="col-md-12">		
-					<h1>WoW Wish List</h1>	
+					<h1>Needful Tings</h1>	
 				</div>
 			</div>
 			<div id="main-navigation"><a href="javascript:void(0);" ng-click="openMessageBox()" ng-hide="isLoggedIn">Login/Register</a></div>

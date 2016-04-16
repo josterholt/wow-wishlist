@@ -14,4 +14,6 @@ import com.hatraz.bucketlist.model.User;
 public interface UserRepo extends JpaRepository<User, Integer> {
 	@Query("SELECT u FROM User u WHERE u.twitter_id = :twitter_id")
 	public User findByTwitterId(@Param("twitter_id") Long id);
+
+	public User findByUsername(String username);
 }

@@ -50,6 +50,10 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 .run(['$rootScope', '$http', '$location', function($scope, $http, $location) {
 	$scope.requests401 = [];
 	$scope.isLoggedIn = false;
+	$scope.login = {
+			"username": "",
+			"password": ""
+	}
 	
 	// Login modal added to root scope
 	$scope.openMessageBox = function () {
@@ -69,6 +73,14 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 	 $scope.$on('event:loginRequired', function () {
 	 	$scope.openMessageBox();
 	 });
+	 
+	 $scope.$on('event:loginConfirmed', function () {
+		 $scope.isLoggedIn = true;
+		 console.debug("login confirmed");
+		 $scope.login.username = "";
+		 $scope.login.password = "";
+		 $("#login-modal").modal('hide');
+	 })
 	 
 
 	 /*

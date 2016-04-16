@@ -8,11 +8,11 @@
              </div>
              <div class="modal-body">
                  <p>
-                 <form >
+                 <form ng-submit="login()">
                      <label>Username</label>
-                     <input type="text" class="input-large" placeholder="Email" />
+                     <input type="text" ng-model="username" class="input-large" placeholder="Email" />
                      <label>Password</label>
-                     <input type="password" class="input-large" placeholder="Password" />
+                     <input type="password" ng-model="password" class="input-large" placeholder="Password" />
                      <label class="checkbox">
                          <input type="checkbox"> Remember me
                      </label>

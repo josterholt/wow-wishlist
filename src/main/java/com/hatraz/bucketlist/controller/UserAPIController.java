@@ -23,6 +23,12 @@ public class UserAPIController {
 	@Autowired UserRepo userService;
 	@Autowired ItemRepo itemService;
 	
+	@RequestMapping(value="/auth/login", method=RequestMethod.POST)
+	public @ResponseBody Boolean login() {
+		// Given we've gotten here, authentication must have succeeded
+		return true;
+	}
+	
 	@RequestMapping(value="/api/favorite/{id}", method=RequestMethod.GET)
 	@Transactional
 	public @ResponseBody Boolean saveFavorite(@PathVariable(value="id") Integer id) {
