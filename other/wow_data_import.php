@@ -89,9 +89,8 @@ $end_num   = 127000;
 
 $id = $start_num;
 
-$insertQuery = $db->prepare("INSERT INTO items (name, description, summary, wowId) VALUES(?, ?, ?, ?);");
-
-
+$insertQuery = $db->prepare("INSERT INTO items (name, description, summary, icon, wowId) VALUES(?, ?, ?, ?, ?);");
+$updateQuery = $db->prepare("UPDATE items SET name = ?, description = ?, icon = ? WHERE wowId = ?");
 
 while($has_content) {
 	if($id > $end_num) {
@@ -104,17 +103,18 @@ while($has_content) {
 
 	if(!file_exists($json_file)) {
 		$content = file_get_contents($url);
-		file_put_contents($json_file, $content);
-		
-		if(empty($content)) {
-			echo "Empty response, skipping\n";
-			$id++;
-			continue;
-		}
+		file_put_contents($json_file, $content);		
 	} else {
 		echo "Using cached file...\n";
 		$content = file_get_contents($json_file);
 	}
+
+	$id++;
+	if(empty($content)) {
+		echo "Empty response, skipping\n";
+		continue;
+	}
+
 
 	$item = json_decode($content);
 
@@ -126,15 +126,14 @@ while($has_content) {
 	$existing = $query->fetch()[0];
 
 	if(!empty($existing)) {
-		echo "We're skipping existing ones for now...\n";
+		$updateQuery->execute(array($item->name, $item->description, $item->icon, $item->id));
+		echo "Updated\n";		
 	} else {
 		//$collection->insert($item);	
-		$insertQuery->execute(array($item->name, $item->description, "", $item->id));
+		$insertQuery->execute(array($item->name, $item->description, "", $item->icon, $item->id));
 		echo "Added\n";		
 	}
 
-	//sleep(1);
-	$id++;
 	$bm->incrementAndCheckWait();		
 }
 echo "End script\n";

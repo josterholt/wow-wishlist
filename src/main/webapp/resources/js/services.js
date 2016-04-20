@@ -10,8 +10,9 @@ angular.module('bucketlist.services', ['ngResource']).
 		var Item = $resource('/api/items/:id', 
 			{ type: 'Item' },
 			{ 
-				update: { method: 'POST' },
-				query: {method: 'GET', isArray: true }
+				update: { method: 'POST'},
+				search: {method: 'GET', isArray: true},
+				get: {method: 'GET'}
 			}
 		);
 

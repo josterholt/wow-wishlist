@@ -15,9 +15,8 @@ angular.module('bucketlist.controllers', []).
 	            focusOpen: false,
 	            onlySelect: true,
 	            source: function (request, response) {
-	            	Item.query({ 'name': request.term }, function (data) {
+	            	Item.search({ 'name': request.term }, function (data) {
 	            		data.$promise.then(function (results) {
-	            			console.debug(results);
 	            			var data = [];
 			                if (!results.length) {
 			                    data.push({
@@ -26,7 +25,6 @@ angular.module('bucketlist.controllers', []).
 			                    });
 			                } else {
 			                	for(var i =0; i < results.length; i++) {
-			                		console.debug(results[i]);
 			                		data.push({ 
 			                			id: results[i].id,
 			                			label: results[i].name,
@@ -64,14 +62,57 @@ angular.module('bucketlist.controllers', []).
           }
 	  }
   }]).
-  controller('HomeCtrl', ['$scope', 'WishList', function($scope, WishList) {
-	  $scope.WishList = WishList;
+  controller('HomeCtrl', ['$scope', 'WishList', '$http', function($scope, WishList, $http) {
+	  $scope.removeFavorite = function (id) {
+		  $http.get("/api/favorite/" + id + "/delete");
+		  $scope.WishList = []
+		  $scope.refreshWishlist();
+	  }
+	  	  
+	  $scope.refreshWishlist = function () {
+		  $http.get("/api/favorites/")
+		  	.then(function (response) {
+		  		$scope.WishList = WishList;
+	  		
+		  		for(var i in response.data) {
+		  		    $scope.itemFavorites.push(response.data[i].id);
+		  		}
+		  		
+		  		$scope.WishList = {items: response.data};
+		  });
+	  }
+	  $scope.refreshWishlist();
   }])
   .controller('SearchCtrl', ['$routeParams', '$scope', function($routeParams, $scope) {
-	  $scope.items = Item.query({ 'name': request.term });
+	  $scope.items = Item.search({ 'name': request.term });
   }])
-  .controller('ItemDetailCtrl', ['$scope', '$routeParams', 'Item', function($scope, $routeParams, Item) {
-	  console.debug('Item detail');
-	  console.debug($routeParams.id);
-	  $scope.item = Item.query({ id: $routeParams.id });
+  .controller('ItemDetailCtrl', ['$scope', '$routeParams', 'Item', '$http', '$timeout', function($scope, $routeParams, Item, $http, $timeout) {
+	  $scope.addFavorite = function () {
+		  $http.get("/api/favorite/" + $scope.item.id)
+		  .then(function () {
+			  if($scope.itemFavorites.indexOf($scope.item.id) == -1) {
+				  $scope.itemFavorites.push($scope.item.id);
+			  }
+		  });
+	  }
+	  
+	  $scope.removeFavorite = function () {
+		  $http.get("/api/favorite/" + $scope.item.id + "/delete")
+		  	.then(function () {
+			  var idx = $scope.itemFavorites.indexOf($scope.item.id)
+			  $scope.itemFavorites.splice(idx, 1);
+		  });		  
+	  }
+	  
+	  $http.get("/api/getFavoriteIDs?ids=" + $routeParams.id)
+	  	.then(function (items) {
+	  		$timeout(function () {
+		  		for(var i in items.data) {
+		  			console.debug('foo');
+		  			$scope.itemFavorites.push(items.data[i])
+		  		}
+	  		}, 0)
+	  	})
+	  
+	  $scope.item = Item.get({ id: $routeParams.id });
   }]);

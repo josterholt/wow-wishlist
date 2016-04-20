@@ -23,6 +23,17 @@ public class Item {
 	}
 	
 	@Column
+	String icon;
+	
+	public String getIcon() {
+		return this.icon;
+	}
+	
+	public void setIcon(String val) {
+		this.icon = val;
+	}
+	
+	@Column
 	Integer wowId;
 	
 	public Integer getWoWId() {

@@ -1,1 +1,6 @@
 <h1>Item Description</h1>
+<div>{{item.name}}</div>
+<div ng-if="item.icon != null"><img src="http://us.media.blizzard.com/wow/icons/56/{{item.icon}}.jpg" /></div>
+<div>{{item.description}}</div>
+<a href="javascript:void" ng-click="addFavorite()" ng-hide="isFavorited(item.id)">Add to Favorite</a>
+<a href="javascript:void" ng-click="removeFavorite()" ng-show="isFavorited(item.id)">Remove from Favorite</a>

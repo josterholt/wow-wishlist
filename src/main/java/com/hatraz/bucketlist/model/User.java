@@ -2,9 +2,13 @@ package com.hatraz.bucketlist.model;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -17,6 +21,7 @@ import javax.persistence.Transient;
 import org.hibernate.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.transaction.annotation.Transactional;
 
 @Entity
 @Table(name = "users")
@@ -100,13 +105,13 @@ public class User implements UserDetails {
 		joinColumns={@JoinColumn(name="user_id")},
 		inverseJoinColumns={@JoinColumn(name="item_id")}
 	)
-	private Collection<Item> favorite_items;
+	private Set<Item> favorite_items;
 	
-	public Collection<Item> getFavoriteItems() {
+	public Set<Item> getFavoriteItems() {
 		return this.favorite_items;
 	}
 	
-	public void setFavoriteItems(Collection<Item> items) {
+	public void setFavoriteItems(Set<Item> items) {
 		this.favorite_items = items;
 	}
 

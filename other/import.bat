@@ -1,0 +1,1 @@
+/php7/php.exe ./wow_data_import.php

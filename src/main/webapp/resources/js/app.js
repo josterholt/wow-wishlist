@@ -82,6 +82,14 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 		 $("#login-modal").modal('hide');
 	 })
 	 
+	  $scope.itemFavorites = [];
+	  $scope.isFavorited = function (id) {
+		  console.debug("Checking favorited for " + id);
+		  console.debug($scope.itemFavorites);
+		  return $scope.itemFavorites.indexOf(id) !== -1;
+	  }
+	 
+	 
 
 	 /*
 	  * Checks to see if user is logged in
