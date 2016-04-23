@@ -1,2 +1,4 @@
 /war
 other/data_cache/*
+.settings/*
+.classpath
