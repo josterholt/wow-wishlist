@@ -1,12 +1,12 @@
 <div class="row">
 	<div class="col-md-8">
 		<section id="main-col">
-			<ul ui-sortable ng-model="WishList.items" class="list-unstyled">
+			<ul ui-sortable="WishList.sortableOptions" ng-model="WishList.items" class="list-unstyled">
 				<li ng-repeat="item in WishList.items">
 					<div class="row">
-						<div class="col-md-3"><div ng-if="item.icon != null"><img src="http://us.media.blizzard.com/wow/icons/56/{{item.icon}}.jpg" /></div></div>
-						<div class="col-md-8">{{item.name}}</div>
-						<div class="col-md-1"><a href="javascript:void" ng-click="removeFavorite(item.id)" ng-show=isFavorited(item.id)>x</a><a href="javascript:void" ng-click="addFavorite(item.id)" ng-hide=isFavorited(item.id)>❤</a></div>
+						<div class="col-md-3"><div ng-if="item.icon != null"><a href ng-href="#/item/{{item.id}}"><img src="http://us.media.blizzard.com/wow/icons/56/{{item.icon}}.jpg" /></a></div></div>
+						<div class="col-md-8"><a href ng-href="#/item/{{item.id}}">{{item.name}}</a></div>
+						<div class="col-md-1"><a href="javascript:void" ng-click="WishList.removeFavorite(item.id)" ng-show=isFavorited(item.id)>x</a><a href="javascript:void" ng-click="WishLlist.addFavorite(item.id)" ng-hide=isFavorited(item.id)>❤</a></div>
 					</div>
 				</li>
 			</ul>

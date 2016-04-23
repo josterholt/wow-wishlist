@@ -46,37 +46,46 @@ angular.module('bucketlist.services', ['ngResource']).
 			}
 		}
 	}).
-	service('WishList', function () {
-		var items = [
-             { 
-            	 name: 'Test 1',
-            	 type: 'ACHIEVEMENT'
-    		 }, 
-    		 {
-    			 name: 'Test 2',
-    			 type: 'ITEM'
-			 },
-    		 {
-    			 name: 'Test 3',
-    			 type: 'SET'
-			 }
-		 ];
+	service('WishList', function ($rootScope, $http) {
 		
-		// @todo code out function
-		var getItem = function (id) {
-			return items[0];
-		};
-
-		// @todo code out function		
-		var getItems = function (criteria) {
-			return items;
-		};
+		  
+		var WishList = {
+			items: [],
+			getItems: function () {
+				$http.get("/api/favorites/")
+			  	.then(function (response) {  		
+			  		for(var i in response.data) {
+			  		    $rootScope.itemFavorites.push(response.data[i].id);
+			  		}
+			  		WishList.items = response.data;
+			  });
+			},
+			getItem: function(id) {
+				return items[0];
+			},
+			addFavorite: function (id) {
+				  $http.get("/api/favorite/" + id)
+				  .then(function () {
+					  if($rootScope.itemFavorites.indexOf(id) == -1) {
+						  $rootScope.itemFavorites.push(id);
+					  }
+				  });
+			  },			  
+			  removeFavorite: function (id) {
+				  $http.get("/api/favorite/" + id + "/delete")
+				  	.then(function () {
+					  var idx = $rootScope.itemFavorites.indexOf(id)
+					  $rootScope.itemFavorites.splice(idx, 1);
+				  });		  
+			  },	
+			sortableOptions: {
+				  stop: function(e, ui) {
+					  console.debug("Update sorting");
+				  },
+			  }
+		}
 		
-		return { 
-			items: items,
-			getItem: getItem,
-			getItems: getItems
-		};
+	  return WishList;
 	}).
 	factory('Base64', function () {
 	    /* jshint ignore:start */

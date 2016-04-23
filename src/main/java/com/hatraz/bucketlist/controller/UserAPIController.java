@@ -3,8 +3,10 @@ package com.hatraz.bucketlist.controller;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -93,11 +95,11 @@ public class UserAPIController {
 	
 	@RequestMapping(value="/api/favorite/{id}", method=RequestMethod.GET)
 	@Transactional
-	public @ResponseBody Boolean saveFavorite(@PathVariable(value="id") Integer id) {
+	public @ResponseBody Map<String, Boolean> saveFavorite(@PathVariable(value="id") Integer id) {
 		Integer userID = (Integer) request.getSession().getAttribute("user_id");
 
 		if(userID == null) {
-			return false;
+			return Collections.singletonMap("success", true);
 		}
 
 		User user = userService.findOne(userID);
@@ -107,17 +109,17 @@ public class UserAPIController {
 		user.addFavoriteItem(item);
 		userService.save(user);
 
-		return true;
+		return Collections.singletonMap("success", true);
 		
 	}
 	
 	@RequestMapping(value="/api/favorite/{id}/delete", method=RequestMethod.GET)
 	@Transactional
-	public @ResponseBody Boolean deleteFavorite(@PathVariable(value="id") Integer id) {
+	public @ResponseBody Map<String, Boolean> deleteFavorite(@PathVariable(value="id") Integer id) {
 		Integer userID = (Integer) request.getSession().getAttribute("user_id");
 
 		if(userID == null) {
-			return false;
+			return Collections.singletonMap("success", true);
 		}
 
 		User user = userService.findOne(userID);
@@ -131,7 +133,7 @@ public class UserAPIController {
 		user.setFavoriteItems(items);
 		userService.save(user);
 
-		return true;
+		return Collections.singletonMap("success", true);
 		
 	}	
 }

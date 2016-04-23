@@ -63,52 +63,18 @@ angular.module('bucketlist.controllers', []).
 	  }
   }]).
   controller('HomeCtrl', ['$scope', 'WishList', '$http', function($scope, WishList, $http) {
-	  $scope.removeFavorite = function (id) {
-		  $http.get("/api/favorite/" + id + "/delete");
-		  $scope.WishList = []
-		  $scope.refreshWishlist();
-	  }
-	  	  
-	  $scope.refreshWishlist = function () {
-		  $http.get("/api/favorites/")
-		  	.then(function (response) {
-		  		$scope.WishList = WishList;
-	  		
-		  		for(var i in response.data) {
-		  		    $scope.itemFavorites.push(response.data[i].id);
-		  		}
-		  		
-		  		$scope.WishList = {items: response.data};
-		  });
-	  }
-	  $scope.refreshWishlist();
+	  $scope.WishList = WishList;
+	  $scope.WishList.getItems();
   }])
   .controller('SearchCtrl', ['$routeParams', '$scope', function($routeParams, $scope) {
 	  $scope.items = Item.search({ 'name': request.term });
   }])
-  .controller('ItemDetailCtrl', ['$scope', '$routeParams', 'Item', '$http', '$timeout', function($scope, $routeParams, Item, $http, $timeout) {
-	  $scope.addFavorite = function () {
-		  $http.get("/api/favorite/" + $scope.item.id)
-		  .then(function () {
-			  if($scope.itemFavorites.indexOf($scope.item.id) == -1) {
-				  $scope.itemFavorites.push($scope.item.id);
-			  }
-		  });
-	  }
-	  
-	  $scope.removeFavorite = function () {
-		  $http.get("/api/favorite/" + $scope.item.id + "/delete")
-		  	.then(function () {
-			  var idx = $scope.itemFavorites.indexOf($scope.item.id)
-			  $scope.itemFavorites.splice(idx, 1);
-		  });		  
-	  }
-	  
+  .controller('ItemDetailCtrl', ['$scope', '$routeParams', 'Item', '$http', '$timeout', 'WishList', function($scope, $routeParams, Item, $http, $timeout, WishList) {
+	  $scope.WishList = WishList;
 	  $http.get("/api/getFavoriteIDs?ids=" + $routeParams.id)
 	  	.then(function (items) {
 	  		$timeout(function () {
 		  		for(var i in items.data) {
-		  			console.debug('foo');
 		  			$scope.itemFavorites.push(items.data[i])
 		  		}
 	  		}, 0)

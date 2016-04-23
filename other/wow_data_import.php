@@ -1,6 +1,6 @@
 <?php
 /**
- * Environment variables
+ * Environment variables & Class/Function definition
  */
 $database_name = 'wowdata';
 $content_type = 'item';
@@ -11,18 +11,7 @@ $cache_dir = "data_cache/";
 $db = new PDO('mysql:host=ubuntu;port=3306;dbname=wishlist', 'dbuser', 'dbuser');
 
 function microtime_float() {
-	//list($usec, $sec) = explode(" ", microtime());	
-	//return ((float)$usec + (float)$sec);
 	return microtime(true);
-}
-
-function microtime_used($before,$after) {
-    return (substr($after,11)-substr($before,11)) 
-    	+(substr($after,0,9)-substr($before,0,9));
-}
-
-function getBatchTime($start_time) {
-	return $end_time - $start_time;
 }
 
 class BatchManager {
@@ -68,29 +57,23 @@ class BatchManager {
 		$this->_numItems++;
 	}
 }
+
+/**
+ * SCRIPT
+ */
+echo "Start at: ".date("m-d-Y h:i:s")."\n";
+$SCRIPT_START_TIME = microtime_float(true);
 $bm = new BatchManager(100, 1);
 
-/*
-$i = 0;
-while($i < 1000) {
-	$bm->incrementAndCheckWait();
-	//usleep(1000000);
-	echo $i."\n";
-	$i++;
-}
-die();
-*/
 
 $has_content = true;
 $start_num = 0;
 $end_num   = 127000;
-//$start_num = 1998;
-//$end_num = 1998;
 
 $id = $start_num;
 
-$insertQuery = $db->prepare("INSERT INTO items (name, description, summary, icon, wowId) VALUES(?, ?, ?, ?, ?);");
-$updateQuery = $db->prepare("UPDATE items SET name = ?, description = ?, icon = ? WHERE wowId = ?");
+$insertQuery = $db->prepare("INSERT INTO items (name, description, summary, icon, wowId, requiredSkillRank, itemLevel, sellPrice) VALUES(?, ?, ?, ?, ?, ?, ?, ?);");
+$updateQuery = $db->prepare("UPDATE items SET name = ?, description = ?, icon = ?, requiredSkillRank = ?, itemLevel = ?, sellPrice = ? WHERE wowId = ?");
 
 while($has_content) {
 	if($id > $end_num) {
@@ -126,14 +109,15 @@ while($has_content) {
 	$existing = $query->fetch()[0];
 
 	if(!empty($existing)) {
-		$updateQuery->execute(array($item->name, $item->description, $item->icon, $item->id));
+		$updateQuery->execute(array($item->name, $item->description, $item->icon, $item->id, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice));
 		echo "Updated\n";		
 	} else {
 		//$collection->insert($item);	
-		$insertQuery->execute(array($item->name, $item->description, "", $item->icon, $item->id));
+		$insertQuery->execute(array($item->name, $item->description, "", $item->icon, $item->id, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice));
 		echo "Added\n";		
 	}
-
-	$bm->incrementAndCheckWait();		
+	$bm->incrementAndCheckWait();
 }
 echo "End script\n";
+echo "Time Elapsed: ".(microtime_float(true) - $SCRIPT_START_TIME)."\n";
+echo "Endeded at: ".date("m-d-Y h:i:s")."\n";

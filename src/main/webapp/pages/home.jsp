@@ -4,7 +4,7 @@
 <html ng-app="bucketlist">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<title>Bucketlist</title>
+<title>Needful Tings</title>
 <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
 <link rel="stylesheet" href="/resources/css/app.css" />
@@ -16,7 +16,7 @@
 		<section id="header" class="col-md-12">	
 			<div class="row">
 				<div class="col-md-12">		
-					<h1>Needful Tings</h1>	
+					<h1><a href="#">Needful Tings</a></h1>	
 				</div>
 			</div>
 			<div id="main-navigation"><a href="javascript:void(0);" ng-click="openMessageBox()" ng-hide="isLoggedIn">Login/Register</a></div>

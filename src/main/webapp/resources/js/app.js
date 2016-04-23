@@ -76,7 +76,7 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 	 
 	 $scope.$on('event:loginConfirmed', function () {
 		 $scope.isLoggedIn = true;
-		 console.debug("login confirmed");
+		 //console.debug("login confirmed");
 		 $scope.login.username = "";
 		 $scope.login.password = "";
 		 $("#login-modal").modal('hide');
@@ -84,8 +84,8 @@ config(['$routeProvider', '$httpProvider', function($routeProvider, $httpProvide
 	 
 	  $scope.itemFavorites = [];
 	  $scope.isFavorited = function (id) {
-		  console.debug("Checking favorited for " + id);
-		  console.debug($scope.itemFavorites);
+		  //console.debug("Checking favorited for " + id);
+		  //console.debug($scope.itemFavorites);
 		  return $scope.itemFavorites.indexOf(id) !== -1;
 	  }
 	 
