@@ -45,21 +45,18 @@ public class Item {
 	}
 	
 	@Column
-	public String name;
+	private String name;
+	
+	public String getName() {
+		return this.name;
+	}
+	
+	public void setName(String value) {
+		this.name = value;
+	}
 	
 	@Column
 	public String summary;
-	
-	@Column
-	private String description;
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String val) {
-		this.name = val;
-	}
 	
 	public String getSummary() {
 		return summary;
@@ -67,13 +64,38 @@ public class Item {
 	
 	public void setSummary(String val) {
 		this.summary = val;
-	}
+	}	
 	
+	@Column
+	private String description;
+		
 	public String getDescription() {
 		return description;
 	}
 	
 	public void setDescription(String val) {
 		this.description = val;
+	}
+	
+	@Column
+	private Integer requiredSkillRank;
+	
+	public Integer getRequiredSkillRank() {
+		return this.requiredSkillRank;
+	}
+	
+	public void setRequiredSkillRank(Integer value) {
+		this.requiredSkillRank = value;
+	}
+	
+	@Column
+	private Integer itemLevel;
+	
+	public Integer getItemLevel() {
+		return this.itemLevel;
+	}
+	
+	public void setItemLevel(Integer value) {
+		this.itemLevel = value;
 	}
 }

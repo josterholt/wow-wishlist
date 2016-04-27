@@ -45,8 +45,10 @@ public class TwitterAuthenticationFilter extends GenericFilterBean {
 		 */
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		HttpServletRequest req = (HttpServletRequest) request;
-
+		
 		if (authentication == null) {
+			System.out.println("Authentication is null");
+			
 	        Twitter twitter = (Twitter) req.getSession().getAttribute("twitter");
 	        if(twitter != null) {
 		        RequestToken requestToken = (RequestToken) req.getSession().getAttribute("requestToken");
@@ -83,10 +85,18 @@ public class TwitterAuthenticationFilter extends GenericFilterBean {
 		        	System.out.println("Auth exception");
 					//e.printStackTrace();
 				}
+			} else if(req.getHeader("Authorization") != null) {
+				String auth_token = req.getHeader("Authorization");
+				System.out.println(req.getAuthType());
+				System.out.println(auth_token);
+		        
 	        } else {
+	        	
 	        	((HttpServletResponse) response).sendError(401);
 		    	return;
 	        }
+		} else {
+        	System.out.println("Authentication is not null");
 		}
     
 	    System.out.println("Continue down chain");

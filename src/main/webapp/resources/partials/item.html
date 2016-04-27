@@ -1,6 +1,15 @@
-<h1>Item Description</h1>
-<div>{{item.name}}</div>
-<div ng-if="item.icon != null"><img src="http://us.media.blizzard.com/wow/icons/56/{{item.icon}}.jpg" /></div>
-<div>{{item.description}}</div>
+<h1>{{item.name}}</h1>
+<div class="row">
+	<div class="col-md-12 icon">
+		<img src="http://us.media.blizzard.com/wow/icons/56/{{item.icon}}.jpg" class="thumbnail pull-left" />
+		<div class="caption">{{item.description}}</div>
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-12">
+		<strong>Required Rank:</strong> {{item.requiredSkillRank}}<br />
+		<strong>Item Level:</strong> {{item.itemLevel}}
+	</div>
+</div>
 <a href="javascript:void" ng-click="WishList.addFavorite(item.id)" ng-hide="isFavorited(item.id)">Add to Favorite</a>
 <a href="javascript:void" ng-click="WishList.removeFavorite(item.id)" ng-show="isFavorited(item.id)">Remove from Favorite</a>

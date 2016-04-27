@@ -5,14 +5,22 @@
 
 	<global-method-security secured-annotations="enabled"></global-method-security>
 
-	<http auto-config='true' security="none" pattern="/auth/login"></http>
+<!-- 	<http auto-config='true' security="none" pattern="/auth/login"></http> -->
 	
 	<http auto-config='true' use-expressions="false" entry-point-ref="twitterEntryPoint">
     	<intercept-url pattern="/auth/**" access="ROLE_USER" />
     	<logout logout-url="/logout" logout-success-url="/" />
     	<custom-filter position="PRE_AUTH_FILTER" ref="twitterFilter" />
+    	<remember-me services-ref="rememberMeServices"/>
     </http>
-        
+
+	<beans:bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
+	    <beans:property name="userDetailsService" ref="UserDetailServiceImpl"/>
+	    <beans:property name="tokenValiditySeconds" value="864000"/>
+	    <beans:property name="cookieName" value="SPRING_RM"/>
+	    <beans:property name="key" value="myAppKey"/>
+	</beans:bean>
+
     <beans:bean id="twitterEntryPoint" class="com.hatraz.bucketlist.security.TwitterAuthenticationEntryPoint" />
 	
 	<beans:bean id="twitterFilter" class="com.hatraz.bucketlist.security.TwitterAuthenticationFilter">

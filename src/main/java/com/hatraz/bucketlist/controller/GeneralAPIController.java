@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class GeneralAPIController {
 	@RequestMapping(value="/auth/ping", method=RequestMethod.GET)
 	public ResponseEntity<String> ping() {
+		
 		return new ResponseEntity<String>(HttpStatus.OK);
 	}
-	
+	 
 	@RequestMapping(value="/api/login", method=RequestMethod.POST)
 	public ResponseEntity<String> login() {
 		return new ResponseEntity<String>(HttpStatus.OK);

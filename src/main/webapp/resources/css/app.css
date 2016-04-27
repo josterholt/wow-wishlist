@@ -49,3 +49,7 @@
 #keyword-search [name=keywords] {
 	width: 210px;
 }
+
+.icon .thumbnail {
+	margin-right: 10px;
+}

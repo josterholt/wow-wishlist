@@ -5,8 +5,12 @@
 				<li ng-repeat="item in WishList.items">
 					<div class="row">
 						<div class="col-md-3"><div ng-if="item.icon != null"><a href ng-href="#/item/{{item.id}}"><img src="http://us.media.blizzard.com/wow/icons/56/{{item.icon}}.jpg" /></a></div></div>
-						<div class="col-md-8"><a href ng-href="#/item/{{item.id}}">{{item.name}}</a></div>
-						<div class="col-md-1"><a href="javascript:void" ng-click="WishList.removeFavorite(item.id)" ng-show=isFavorited(item.id)>x</a><a href="javascript:void" ng-click="WishLlist.addFavorite(item.id)" ng-hide=isFavorited(item.id)>❤</a></div>
+						<div class="col-md-8">
+							<a href ng-href="#/item/{{item.id}}">{{item.name}}</a>
+							<div><strong>Required Rank:</strong> {{item.requiredSkillRank}}</div>
+							<div><strong>Item Level:</strong> {{item.itemLevel}}</div>
+						</div>
+						<div class="col-md-1"><a href="javascript:void" ng-click="WishList.removeFavorite(item.id)" ng-show=isFavorited(item.id)>x</a><a href="javascript:void" ng-click="WishLlist.addFavorite(item.id)" ng-hide=isFavorited(item.id)>â�¤</a></div>
 					</div>
 				</li>
 			</ul>

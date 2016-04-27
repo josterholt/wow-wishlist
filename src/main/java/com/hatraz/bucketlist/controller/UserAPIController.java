@@ -1,5 +1,6 @@
 package com.hatraz.bucketlist.controller;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,10 +11,13 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,23 +38,21 @@ public class UserAPIController {
 	@Autowired ItemRepo itemService;
 	
 	@RequestMapping(value="/auth/login", method=RequestMethod.POST)
-	public @ResponseBody Boolean login() {
+	public @ResponseBody Map<String, Boolean> login() {
 		// Given we've gotten here, authentication must have succeeded
-		return true;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		if(authentication == null || !authentication.isAuthenticated()) {
+			return Collections.singletonMap("status", false);
+		} else {
+			return Collections.singletonMap("status", true);
+		}
 	}
 	
 	@RequestMapping(value="/api/favorites/", method=RequestMethod.GET)
 	@Transactional
 	public @ResponseBody Collection<Item> getFavorites() {
-		//User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		Integer userID = (Integer) request.getSession().getAttribute("user_id");
+		User user = getUser();
 
-		if(userID == null) {
-			return null;
-		}
-
-		User user = userService.findOne(userID);
-		
 		if(request.getParameter("ids") != null) {
 			List<Integer> ints = new ArrayList<Integer>();
 			for(String s : request.getParameter("ids").split(",")) {
@@ -65,18 +67,16 @@ public class UserAPIController {
 	}
 	
 	private User getUser() {
-		Integer userID = (Integer) request.getSession().getAttribute("user_id");
-
-		if(userID == null) {
-			return null;
-		}
-
-		return userService.findOne(userID);
+		Authentication auth = ((SecurityContext) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT")).getAuthentication();
+		User principal = null;
+		if(auth != null) {
+			principal = (User) auth.getPrincipal();
+		}		
+		return userService.findOne(principal.getId());
 	}
 	
 	@RequestMapping(value="/api/getFavoriteIDs", method=RequestMethod.GET)
 	public @ResponseBody List<Integer> getFavoriteIDs() {
-
 		User user = getUser();
 		List<Integer> ints = new ArrayList<Integer>();
 		if(request.getParameter("ids") != null) {
@@ -96,13 +96,7 @@ public class UserAPIController {
 	@RequestMapping(value="/api/favorite/{id}", method=RequestMethod.GET)
 	@Transactional
 	public @ResponseBody Map<String, Boolean> saveFavorite(@PathVariable(value="id") Integer id) {
-		Integer userID = (Integer) request.getSession().getAttribute("user_id");
-
-		if(userID == null) {
-			return Collections.singletonMap("success", true);
-		}
-
-		User user = userService.findOne(userID);
+		User user = getUser();
 
 		System.out.println("Looking up id: " + id.toString());
 		Item item = itemService.findOne(id);		
@@ -116,15 +110,8 @@ public class UserAPIController {
 	@RequestMapping(value="/api/favorite/{id}/delete", method=RequestMethod.GET)
 	@Transactional
 	public @ResponseBody Map<String, Boolean> deleteFavorite(@PathVariable(value="id") Integer id) {
-		Integer userID = (Integer) request.getSession().getAttribute("user_id");
-
-		if(userID == null) {
-			return Collections.singletonMap("success", true);
-		}
-
-		User user = userService.findOne(userID);
-
-		System.out.println("Looking up id: " + id.toString());
+		User user = getUser();
+		
 		Item item = itemService.findOne(id);
 		
 		Set<Item> items = user.getFavoriteItems();

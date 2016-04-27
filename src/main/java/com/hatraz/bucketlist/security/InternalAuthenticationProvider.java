@@ -28,19 +28,26 @@ public class InternalAuthenticationProvider implements AuthenticationProvider {
     	// Don't think this is casting to the right object
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
-        System.out.println(username);
-        System.out.println(password);
 
         User user = userService.findByUsername(username);
+        if(user != null) {
+	        System.out.println("getPassword()");
+	        System.out.println(user.getPassword());
+	        System.out.println("Password");
+	        System.out.println(password);;
+	        if(!user.getPassword().equals(password)) {
+	        	throw new BadCredentialsException("Bad Credentials");
+	        }
         
-        if(!user.getPassword().equals(password)) {
-        	throw new BadCredentialsException("Bad Credentials");
+	        //user.clearPassword();
+	        user.password = "";
+	        //List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
+	        System.out.println("Return Authentication Token");
+	        //authentication.getCredentials()
+	        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         }
-        
-        //user.clearPassword();
-        user.password = "";
-        //List<GrantedAuthority> grantedAuths = new ArrayList<GrantedAuthority>();
-        return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());    
+        System.out.println("Returning null");
+        return null;
     }
 
     public final boolean supports(Class<?> authentication) {
