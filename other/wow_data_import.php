@@ -72,9 +72,14 @@ $end_num   = 127000;
 
 $id = $start_num;
 
-$insertQuery = $db->prepare("INSERT INTO items (name, description, summary, icon, wowId, requiredSkillRank, itemLevel, sellPrice) VALUES(?, ?, ?, ?, ?, ?, ?, ?);");
-$updateQuery = $db->prepare("UPDATE items SET name = ?, description = ?, icon = ?, requiredSkillRank = ?, itemLevel = ?, sellPrice = ? WHERE wowId = ?");
+$insertQuery = $db->prepare("INSERT INTO items (name, description, summary, icon, wowId, requiredSkillRank, itemLevel, sellPrice, created, updated) VALUES(?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW());");
+$updateQuery = $db->prepare("UPDATE items SET name = ?, description = ?, icon = ?, requiredSkillRank = ?, itemLevel = ?, sellPrice = ?, updated = NOW() WHERE wowId = ?");
+$insertUpdateQuery = $db->prepare("INSERT INTO items (name, description, summary, icon, wowId, requiredSkillRank, itemLevel, sellPrice, created, updated) VALUES(?, ?, ?, ?, ?, ?, ?, ?, NOW(), NOW()) ON DUPLICATE KEY UPDATE name = ?, description = ?, summary = ?, icon = ?, requiredSkillRank = ?, itemLevel = ?, sellPrice = ?, updated = NOW();");
 
+$db->beginTransaction();
+
+$updates = 0;
+$transaction_threshold = 20000;
 while($has_content) {
 	if($id > $end_num) {
 		break;
@@ -84,12 +89,14 @@ while($has_content) {
 
 	$json_file = $cache_dir.$id.".json";
 
+	$cached_file = false;
 	if(!file_exists($json_file)) {
 		$content = file_get_contents($url);
 		file_put_contents($json_file, $content);		
 	} else {
 		echo "Using cached file...\n";
 		$content = file_get_contents($json_file);
+		$cached_file = true;
 	}
 
 	$id++;
@@ -101,22 +108,43 @@ while($has_content) {
 
 	$item = json_decode($content);
 
-	echo "Searching for existing {$item->id}\n";
+	//echo "Searching for existing {$item->id}\n";
 	//$existing = $collection->findone(array("id" => $item->id));
-	$query = $db->query("SELECT COUNT(*) > 0 FROM items WHERE wowId = ". (int) $item->id);
-	$query->execute();
+	//$query = $db->query("SELECT COUNT(*) > 0 FROM items WHERE wowId = ". (int) $item->id);
+	//$query->execute();
 
-	$existing = $query->fetch()[0];
+	//$existing = $query->fetch()[0];
 
+	/*
 	if(!empty($existing)) {
 		$updateQuery->execute(array($item->name, $item->description, $item->icon, $item->id, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice));
 		echo "Updated\n";		
 	} else {
-		//$collection->insert($item);	
 		$insertQuery->execute(array($item->name, $item->description, "", $item->icon, $item->id, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice));
-		echo "Added\n";		
+		echo "Add\n";		
 	}
-	$bm->incrementAndCheckWait();
+	*/
+
+	$insertUpdateQuery->execute(array($item->name, $item->description, "", $item->icon, $item->id, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice, $item->name, $item->description, "", $item->icon, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice));
+	
+	echo $updates ." ".$transaction_threshold."\n";
+	if($updates >= $transaction_threshold) {
+		//echo "Memory before commit: ".memory_get_usage(true)."\n";
+		$db->commit();
+		$updates = 0;
+		//echo "Memory after commit: ".memory_get_usage(true)."\n";
+		$db->beginTransaction();
+		//echo "Memory after beginTransaction: ".memory_get_usage(true)."\n";
+	}
+
+	$updates += 1;	
+	if(!$cached_file) {
+		$bm->incrementAndCheckWait();
+	}
+}
+
+if($updates > 0) {
+	$db->commit();
 }
 echo "End script\n";
 echo "Time Elapsed: ".(microtime_float(true) - $SCRIPT_START_TIME)."\n";
