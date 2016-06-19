@@ -80,16 +80,23 @@ $db->beginTransaction();
 
 $updates = 0;
 $transaction_threshold = 20000;
+
+if(!$fp = fopen("./master.json", "r")) {
+	die("Unable to open master file\n");
+}
+
+
 while($has_content) {
 	if($id > $end_num) {
 		break;
 	}
 	$url = "https://us.api.battle.net/wow/{$content_type}/{$id}?apikey=***REMOVED***";
-	echo "### Item {$id} ###\n";
+	//echo "### Item {$id} ###\n";
 
 	$json_file = $cache_dir.$id.".json";
 
 	$cached_file = false;
+	/*
 	if(!file_exists($json_file)) {
 		$content = file_get_contents($url);
 		file_put_contents($json_file, $content);		
@@ -98,13 +105,20 @@ while($has_content) {
 		$content = file_get_contents($json_file);
 		$cached_file = true;
 	}
+	*/
+	//echo "Using cached file...\n";
+	if(!$content = fgets($fp)) {
+		$has_content = false;
+	}
+	//echo $content."\n";
+	$cached_file = true;
+
 
 	$id++;
-	if(empty($content)) {
-		echo "Empty response, skipping\n";
+	if(empty($content) || $content == "\n") {
+		//echo "Empty response, skipping\n";
 		continue;
 	}
-
 
 	$item = json_decode($content);
 
@@ -124,10 +138,10 @@ while($has_content) {
 		echo "Add\n";		
 	}
 	*/
-
+	//echo "Adding query...\n";
 	$insertUpdateQuery->execute(array($item->name, $item->description, "", $item->icon, $item->id, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice, $item->name, $item->description, "", $item->icon, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice));
 	
-	echo $updates ." ".$transaction_threshold."\n";
+	//echo $updates ." ".$transaction_threshold."\n";
 	if($updates >= $transaction_threshold) {
 		//echo "Memory before commit: ".memory_get_usage(true)."\n";
 		$db->commit();
@@ -146,6 +160,7 @@ while($has_content) {
 if($updates > 0) {
 	$db->commit();
 }
+fclose($fp);
 echo "End script\n";
 echo "Time Elapsed: ".(microtime_float(true) - $SCRIPT_START_TIME)."\n";
 echo "Endeded at: ".date("m-d-Y h:i:s")."\n";

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,6 +69,14 @@ public class UserAPIController {
 	}
 	
 	private User getUser() {
+		User test_user = (User) request.getUserPrincipal();
+		if(test_user == null) {
+			System.out.println("Test user doesn't exist");
+		} else {
+			System.out.println("User ID:");
+			System.out.println(test_user.getId());
+		}
+
 		Authentication auth = ((SecurityContext) request.getSession().getAttribute("SPRING_SECURITY_CONTEXT")).getAuthentication();
 		User principal = null;
 		if(auth != null) {
@@ -75,6 +85,7 @@ public class UserAPIController {
 		return userService.findOne(principal.getId());
 	}
 	
+	@Secured("ROLE_USER")
 	@RequestMapping(value="/api/getFavoriteIDs", method=RequestMethod.GET)
 	public @ResponseBody List<Integer> getFavoriteIDs() {
 		User user = getUser();
@@ -92,13 +103,11 @@ public class UserAPIController {
 		return itemIDs;
 	}
 			
-	
+	@Secured("ROLE_USER")
 	@RequestMapping(value="/api/favorite/{id}", method=RequestMethod.GET)
 	@Transactional
 	public @ResponseBody Map<String, Boolean> saveFavorite(@PathVariable(value="id") Integer id) {
 		User user = getUser();
-
-		System.out.println("Looking up id: " + id.toString());
 		Item item = itemService.findOne(id);		
 		user.addFavoriteItem(item);
 		userService.save(user);
@@ -107,6 +116,25 @@ public class UserAPIController {
 		
 	}
 	
+	@Secured("ROLE_USER")
+	@RequestMapping(value="/auth/principal", method=RequestMethod.GET)
+	@Transactional
+	public @ResponseBody Map<String, Boolean> testPrincipal() {
+		UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken) request.getUserPrincipal();
+		User test_user = (User) token.getPrincipal();
+		//User test_user = (User) request.getUserPrincipal();
+		if(test_user == null) {
+			System.out.println("Test user doesn't exist");
+		} else {
+			System.out.println("User ID:");
+			System.out.println(test_user.getId());
+		}
+		
+		return Collections.singletonMap("success", true);
+		
+	}
+	
+	@Secured("ROLE_USER")
 	@RequestMapping(value="/api/favorite/{id}/delete", method=RequestMethod.GET)
 	@Transactional
 	public @ResponseBody Map<String, Boolean> deleteFavorite(@PathVariable(value="id") Integer id) {
