@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Environment variables & Class/Function definition
  */
@@ -10,50 +11,58 @@ $cache_dir = "data_cache/";
 
 $db = new PDO('mysql:host=ubuntu;port=3306;dbname=wishlist', 'dbuser', 'dbuser');
 
-function microtime_float() {
+function microtime_float()
+{
 	return microtime(true);
 }
 
-class BatchManager {
+class BatchManager
+{
 	private $_startTime = null;
 	private $_batchDurationThreshold = 1;
 	private $_batchNumItemThreshold = 100;
 	private $_numItems = 0;
 
-	function __construct($numItems = 100, $durationThreshold = 1) {
+	function __construct($numItems = 100, $durationThreshold = 1)
+	{
 		$this->_startTime = microtime(true);
 
 		$this->_batchDurationThreshold = $durationThreshold;
 		$this->_batchNumItemThreshold = $numItems;
 	}
 
-	private function _getBatchDifference() {
+	private function _getBatchDifference()
+	{
 		return microtime(true) - $this->_startTime;
 	}
 
-	private function _checkStartNewBatch() {
-		if($this->_getBatchDifference() > $this->_batchDurationThreshold) {
+	private function _checkStartNewBatch()
+	{
+		if ($this->_getBatchDifference() > $this->_batchDurationThreshold) {
 			echo "Resetting timer...\n";
 			$this->_startTime = microtime(true);
 			$this->_numItems = 0;
 		}
 	}
 
-	public function checkBatchWait() {
-		$this->_checkStartNewBatch();		
+	public function checkBatchWait()
+	{
+		$this->_checkStartNewBatch();
 
-		if($this->_numItems > $this->_batchNumItemThreshold && $this->_getBatchDifference() < $this->_batchDurationThreshold) {
-			echo "Sleeping... (".$this->_getBatchDifference().")\n";
+		if ($this->_numItems > $this->_batchNumItemThreshold && $this->_getBatchDifference() < $this->_batchDurationThreshold) {
+			echo "Sleeping... (" . $this->_getBatchDifference() . ")\n";
 			usleep(1000000);
 		}
 	}
 
-	public function incrementAndCheckWait() {
+	public function incrementAndCheckWait()
+	{
 		$this->incrementNumItems();
 		$this->checkBatchWait();
 	}
 
-	public function incrementNumItems() {
+	public function incrementNumItems()
+	{
 		$this->_numItems++;
 	}
 }
@@ -61,7 +70,7 @@ class BatchManager {
 /**
  * SCRIPT
  */
-echo "Start at: ".date("m-d-Y h:i:s")."\n";
+echo "Start at: " . date("m-d-Y h:i:s") . "\n";
 $SCRIPT_START_TIME = microtime_float(true);
 $bm = new BatchManager(100, 1);
 
@@ -81,19 +90,19 @@ $db->beginTransaction();
 $updates = 0;
 $transaction_threshold = 20000;
 
-if(!$fp = fopen("./master.json", "r")) {
+if (!$fp = fopen("./master.json", "r")) {
 	die("Unable to open master file\n");
 }
 
 
-while($has_content) {
-	if($id > $end_num) {
+while ($has_content) {
+	if ($id > $end_num) {
 		break;
 	}
 	$url = "https://us.api.battle.net/wow/{$content_type}/{$id}?apikey=***REMOVED***";
 	//echo "### Item {$id} ###\n";
 
-	$json_file = $cache_dir.$id.".json";
+	$json_file = $cache_dir . $id . ".json";
 
 	$cached_file = false;
 	/*
@@ -107,7 +116,7 @@ while($has_content) {
 	}
 	*/
 	//echo "Using cached file...\n";
-	if(!$content = fgets($fp)) {
+	if (!$content = fgets($fp)) {
 		$has_content = false;
 	}
 	//echo $content."\n";
@@ -115,7 +124,7 @@ while($has_content) {
 
 
 	$id++;
-	if(empty($content) || $content == "\n") {
+	if (empty($content) || $content == "\n") {
 		//echo "Empty response, skipping\n";
 		continue;
 	}
@@ -140,9 +149,9 @@ while($has_content) {
 	*/
 	//echo "Adding query...\n";
 	$insertUpdateQuery->execute(array($item->name, $item->description, "", $item->icon, $item->id, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice, $item->name, $item->description, "", $item->icon, $item->requiredSkillRank, $item->itemLevel, $item->sellPrice));
-	
+
 	//echo $updates ." ".$transaction_threshold."\n";
-	if($updates >= $transaction_threshold) {
+	if ($updates >= $transaction_threshold) {
 		//echo "Memory before commit: ".memory_get_usage(true)."\n";
 		$db->commit();
 		$updates = 0;
@@ -151,16 +160,16 @@ while($has_content) {
 		//echo "Memory after beginTransaction: ".memory_get_usage(true)."\n";
 	}
 
-	$updates += 1;	
-	if(!$cached_file) {
+	$updates += 1;
+	if (!$cached_file) {
 		$bm->incrementAndCheckWait();
 	}
 }
 
-if($updates > 0) {
+if ($updates > 0) {
 	$db->commit();
 }
 fclose($fp);
 echo "End script\n";
-echo "Time Elapsed: ".(microtime_float(true) - $SCRIPT_START_TIME)."\n";
-echo "Endeded at: ".date("m-d-Y h:i:s")."\n";
+echo "Time Elapsed: " . (microtime_float(true) - $SCRIPT_START_TIME) . "\n";
+echo "Endeded at: " . date("m-d-Y h:i:s") . "\n";
